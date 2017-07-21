@@ -1,0 +1,63 @@
+h1.titulo {
+   margin-top: 0;
+   font-size: 2em;
+   margin-bottom: 0.8em;
+   font-family: 'Lato', sans-serif;
+}
+
+.btn-edit {
+    color: #fff;
+    background-color: #6f5499;
+    border-color: #6f5499;
+}
+
+.btn-edit:hover {
+    color: #fff;
+    background-color: #B287F6;
+    border-color: #B287F6;
+    color: #fff!important;
+}
+
+h1.titulo.folio {
+    color: #6f5499;
+    border-bottom: 4px solid #6f5499;
+}
+
+h1.titulo.huesped {
+    color: #ED5548;
+    border-bottom: 4px solid #ED5548;
+}
+
+h1.titulo.cliente {
+    color: #0072B5;
+    border-bottom: 4px solid #0072B5;
+}
+
+h1.titulo.cargo {
+   color: #5cb85c;
+   border-bottom: 4px solid #5cb85c;
+}
+
+h1.titulo.habitacion {
+   color: #eea236;
+   border-bottom: 4px solid #eea236;
+}
+
+h1.titulo.estadia {
+   color: #007F86;
+   border-bottom: 4px solid #007F86;
+}
+
+h1.titulo.pais {
+   color: #2C3E50;
+   border-bottom: 4px solid #2C3E50;
+}
+
+h3.titulo {
+  margin-top: 1em!important;
+  color: #007F86;
+  font-family: 'Lato', sans-serif;
+  font-size: 1.5em;
+  border-bottom: 1px solid #007F86;
+  margin-bottom: 1em;
+}
