@@ -125,6 +125,8 @@
                      </div>
                   </div>
 
+                  <input type="hidden" name="reservacione_id" value="">
+
                   <div class="col-lg-12">
                      <label for="titulo" class="col-sm-2 control-label">Tarifa</label>
                      <div class="col-sm-8">
@@ -142,6 +144,8 @@
          <input type="hidden" name="fechasalida" value="{{Input::get('fechasalida')}}">
 
          <input type="hidden" name="fechaentrada" value="{{Input::get('fechaentrada')}}">
+
+         <input type="hidden" name="reservacionprocedencia_id" value="1">
 
 
 
@@ -183,7 +187,6 @@
           </div>
 
 
-
            </div>
 
 
@@ -202,12 +205,17 @@
                   </div>
                </div>
 
+
+
                <div class="col-lg-6">
                   <label for="titulo" class="col-sm-4 control-label">Apellidos</label>
                     <div class="col-sm-8">
                        <input type="text" class="form-control" name="apellidos[]"  placeholder="Ingrese los apellidos">
                     </div>
                 </div>
+
+
+
 
 
 
@@ -227,15 +235,13 @@
         <div v-if="vue.exp==false"><h3 class="titulo">Huéspedes Adicionales</h3></div>
         <div v-if="vue.exp==true"><h3 class="titulo">Huéspedes</h3>
 
-      
+
 
              </div>
 
             </div>
 
-           <div v-for="(doc, index) in docs"
-           :itemdata="itemList"
-           :doc="doc">
+           <div v-for="doc in docs">
 
            <div class="col-lg-12">
               <div class="col-lg-5">
@@ -254,9 +260,11 @@
                       </div>
                  </div>
 
-              <div class="col-lg-1">
-                 <a href="#" @click.prevent="removeDoc(index)" class="btn btn-danger remove"><i class="glyphicon glyphicon-remove"></i></a>
-              </div>
+                 <input type="hidden" name="encargado[]" value="0">
+
+                 <div class="col-lg-1">
+                    <a href="#" @click.prevent="todoDelete(doc)" class="btn btn-danger remove"><i class="glyphicon glyphicon-remove"></i></a>
+                 </div>
 
             </div>
 
@@ -354,11 +362,11 @@ new Vue({
   },
   methods: {
     addFind2: function () {
-      this.docs.push({tipohab: '', valordocumento: ''});
+      this.docs.push({ value: '' });
     },
-    removeDoc: function(index) {
-     Vue.delete(this.docs, index);
-   },
+    todoDelete(doc) {
+     this.docs.$remove(doc);
+    },
     GetActors: function() {
       if(this.film !== ''){
         this.disableWhenSelect = false;

@@ -46,7 +46,7 @@
 
       <div class="content_1">
 
-      
+
           @verbatim
 
              <div class="col-lg-12">
@@ -145,6 +145,8 @@
                   </select>
               </div>
           </div>
+
+           <input type="hidden" name="reservacione_id" value="">
 
 
           <!--  true  -->

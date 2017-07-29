@@ -10,20 +10,29 @@
   @endif
 
 
-  <h1 class="titulo estadia"> Estadía # {{$estadia->id}} </h1>
+  <h1 class="titulo reserva"> Reserva # {{$reserva->id}} </h1>
 
-  @foreach($estadia->estadiahabitaciones as $eh)
-  Número de Habitación: {{$eh->habitacione->numero}} ({{$eh->habitacione->habitaciontipo->nombre}}) <br/>
-  Entrada:  {{$eh->fechaentrada}}  -  Salida: {{$eh->fechasalida}} <br/>
-  Tarifa:  ${{$eh->tarifa->valor}} <br/>
-  <h3>Huespedes:</h3>
-  @foreach($entidades as $en)
-    @if($eh->id == $en->idestadiahab)
-      {{$en->nombres}} {{$en->apellidos}} <br/>
+  @foreach ($entidades as $en)
+
+    @if($en->encargado == 1)
+    <h3 class="destacado">   Encargado de la Rerserva: {{$en->nombres}} {{$en->apellidos}}<br/> </h3>
+    @endif
+    @break
+  @endforeach
+
+  @foreach($reserva->reservacionhabitaciones as $rh)
+  Fecha: {{$rh->fechaentrada}} / {{$rh->fechasalida}} <br/>
+  Habitación: {{$rh->habitacione->numero}} ({{$rh->habitacione->habitaciontipo->nombre}}) <br/>
+  @foreach ($entidades as $en)
+    @if($en->encargado != 1 && $en->reservacion_habitacione_id == $rh->id)
+      {{$en->nombres}} {{$en->apellidos}}<br/>
     @endif
   @endforeach
+  <br/>
 
-  <hr>
   @endforeach
+
+  <br/>
+
 
 @endsection

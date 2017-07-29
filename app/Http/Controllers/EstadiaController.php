@@ -11,6 +11,7 @@ use App\Estadia;
 use App\EstadiaHabitacione;
 
 use App\EntidadeRole;
+use App\Reservacione;
 
 use App\Habitacione;
 
@@ -21,6 +22,8 @@ use App\Role;
 use App\Folio;
 
 use App\Tarifa;
+
+use App\EntidadeEstadiaHabitacione;
 
 use DB;
 
@@ -93,48 +96,119 @@ class EstadiaController extends Controller
 
          }
 
-        //---------- Guardar la Estadia Habitacion -------------
-        $estadiahab = new EstadiaHabitacione();
-        $estadiahab->fechaentrada = date("Y-m-d");
-        $estadiahab->fechasalida = $request->fechasalida;
-        $estadiahab->tarifa_id = $request->tarifa_id;
-        $estadiahab->habitacione_id = $request->habitacione_id;
-        $estadiahabitacion = $estadia->estadiahabitaciones()->save($estadiahab);
 
-        //---------- Cambia el estado de la Habitacion -------------
+        //----------  Estadia Walking -------------
 
-         $hab = $request->habitacione_id;
-         $habitacion = Habitacione::find($hab);
-         $habitacion->disponible = 0;
-         $habitacion->update();
+         if (empty($request->reservacione_id)) { // si es una estadia walking
 
-        //---------- Guardar las Entidades y su rol -------------
+          //---------- Guardar la Estadia Habitacion -------------
+            $estadiahab = new EstadiaHabitacione();
+            $estadiahab->fechaentrada = date("Y-m-d");
+            $estadiahab->fechasalida = $request->fechasalida;
+            $estadiahab->tarifa_id = $request->tarifa_id;
+            $estadiahab->habitacione_id = $request->habitacione_id;
+            $estadiahabitacion = $estadia->estadiahabitaciones()->save($estadiahab);
 
-        foreach($request->nombres as $key2=> $m) //recorre todos los email
-        {
-            $containers[] = new Entidade(array(
-                           'nombres'=>$request->nombres[$key2],
-                           'apellidos'=>$request->apellidos[$key2],
-                           'tipoentidade_id'=>1,
+            //---------- Cambia el estado de la Habitacion -------------
 
-                        ));
+             $hab = $request->habitacione_id;
+             $habitacion = Habitacione::find($hab);
+             $habitacion->disponible = 0;
+             $habitacion->update();
+
+           //----------Guarda las Entidades Roles -------------
+
+             foreach($request->nombres as $key2=> $m) //recorre todos los email
+             {
+                 $containers[] = new Entidade(array(
+                                'nombres'=>$request->nombres[$key2],
+                                'apellidos'=>$request->apellidos[$key2],
+                                'tipoentidade_id'=>1,
+                                'fechaentrada' => date("Y-m-d"),
+
+                             ));
+             }
+
+             $role = Role::find(1);
+
+             $role->entidades()->saveMany($containers); //Guarda las entidades y su rol
+
+             $estadiahab->entidades()->saveMany($containers);  //Guardar la Entidade - Estadia Habitacion
+         }
+
+        //----------  Estadia Reserva -------------
+
+        else { //es una estadia desde Reserva
+
+              foreach($request->habitacione_id as $key6=> $m) //recorre todos los email
+              {
+                  $containers6[] = new EstadiaHabitacione(array(
+                                 'fechaentrada'=> date("Y-m-d"),
+                                 'fechasalida'=> $request->fechasalida[$key6],
+                                 'tarifa_id'=> $request->tarifa_id[$key6],
+                                 'habitacione_id' => $request->habitacione_id[$key6],
+
+                              ));
+              }
+
+              $estadiahabitacion = $estadia->estadiahabitaciones()->saveMany($containers6); //Guarda la estadia habitacione
+
+            //dd($estadiahabitacion[0]->habitacione_id);
+
+            //---------- Cambia el estado de la Habitacion -------------
+              foreach($estadiahabitacion as $esh){
+                 $hab = $esh->habitacione_id;
+                 $habitacion = Habitacione::find($hab);
+                 $habitacion->disponible = 0;
+                 $habitacion->update();
+
+              }
+
+            //---------- Entidad Estadia Habitacion -------------
+
+              $now = \Carbon\Carbon::now();
+
+                foreach($request->habhuesped_id as $key=> $v) //recorre todas las hab. de cada entidad definidas en reserva
+                 {
+                     $eshab2 = $request->habhuesped_id[$key];
+                     foreach($estadiahabitacion as $eh){
+                        $eshab = $eh->habitacione_id;
+                        if($eshab == $eshab2){ // si el id de la hab. de la entidad es igual al id de la hab. de estadiahabitacion
+                           $idestadiahab = $eh->id; // se obtiene el id de estadiahabitacion
+                        }
+                     }
+
+                      $containers[] = ([
+                                          'entidade_id'=>$request->entidade_id[$key],
+                                          'estadia_habitacione_id'=>$idestadiahab,
+                                          'fechaentrada' => date("Y-m-d"),
+                                          'created_at' => $now,
+                                          'updated_at' => $now,
+
+                                      ]);
+                 }
+
+             DB::table('entidade_estadia_habitacione')->insert($containers); // Guardar la Entidade - Estadia Habitacion
+
+             //---------- Cambia el estado de la Reserva a Inactiva -------------
+
+              $res = $request->reservacione_id;
+              $reserva = Reservacione::find($res);
+              $reserva->activo = 0;
+              $reserva->update();
+
         }
 
-        $role = Role::find(1);
 
-        $role->entidades()->saveMany($containers);
+       //---------- Nueva Estadia -------------
 
-        //---------- Guardar la Entidade - Estadia Habitacion -------------
-
-
-         $estadiahab->entidades()->saveMany($containers);
 
         if (empty($request->estadia_id)) { // si es una nueva estadia
 
             //---------- Agregando un folio  -------------
 
            //---------- Obteniendo el id de la Entidad Rol  -------------
-             if (empty($request->entidadrole_id)) { //si no es un folio cliente
+             if (empty($request->entidadrole_id) && empty($request->reservacione_id) ) { // folio huesped y Estadia walking
 
                 foreach($containers as $c){
                    $entidad1 = $c->id;
@@ -144,6 +218,10 @@ class EstadiaController extends Controller
                  $entidadrol = DB::table('entidade_role')
                  ->where('entidade_role.entidade_id', '=', $entidad1)
                  ->value('entidade_role.id');
+
+            } elseif(empty($request->entidadrole_id) && !empty($request->reservacione_id)) { // folio huesped y estadia desde una reserva
+
+                  $entidadrol = $request->entidade_id[0];
 
             } else { // es un folio cliente
 

@@ -48,6 +48,11 @@ h1.titulo.estadia {
    border-bottom: 4px solid #007F86;
 }
 
+h1.titulo.reserva {
+   color: #D35400;
+   border-bottom: 4px solid #D35400;
+}
+
 h1.titulo.pais {
    color: #2C3E50;
    border-bottom: 4px solid #2C3E50;
@@ -60,4 +65,26 @@ h3.titulo {
   font-size: 1.5em;
   border-bottom: 1px solid #007F86;
   margin-bottom: 1em;
+}
+
+h3.destacado {
+    margin-top: 1em!important;
+    color: #007F86;
+    font-family: 'Lato', sans-serif;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: none;
+    margin-bottom: 1em;
+}
+
+.btn-purple {
+    color: #fff;
+    background-color: #6f5499;
+    border-color: #6f5499;
+}
+
+.btn-purple:hover {
+    Color:#fff!important;
+    background-color: #B287F6;
+    border-color: #B287F6;
 }

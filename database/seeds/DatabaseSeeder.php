@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RolesTableSeeder::class);
         $this->call(TipoEntidadesTableSeeder::class);
         $this->call(BitacoraTipoCambiosTableSeeder::class);
+        $this->call(ReservacionProcedenciasTableSeeder::class);
 
     }
 }

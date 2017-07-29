@@ -6,7 +6,7 @@
 
   <ul class="animate">
 
-    <a class="m9" href="<?php echo  url('/');?>/huespedes">
+    <a class="m9" href="<?php echo  url('/');?>/reservaciones">
       <li class="animate">
         Reservas<i class="fa fa-address-card float-right"></i>
       </li>

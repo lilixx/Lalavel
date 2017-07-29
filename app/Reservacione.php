@@ -14,4 +14,9 @@ class Reservacione extends Model
     {
        return $this->hasMany(ReservacionHabitacione::class);
     }
+
+    public function reservacionentidadroles()
+    {
+       return $this->hasMany(ReservacionEntidadRole::class);
+    }
 }

@@ -14,6 +14,10 @@ use App\Reservacione;
 
 use App\ReservacionHabitacione;
 
+use App\ReservacionEntidadRole;
+
+use DB;
+
 class ReservacioneController extends Controller
 {
     /**
@@ -23,7 +27,8 @@ class ReservacioneController extends Controller
      */
     public function index()
     {
-        //
+        $reserva = Reservacione::where('activo', 1)->get();
+        return view('reservaciones.reservaciones',compact('reserva'));
     }
 
     /**
@@ -33,12 +38,35 @@ class ReservacioneController extends Controller
      */
     public function create()
     {
-      $tipohab = HabitacionTipo::all();
-      $cliente = new Entidade;
-      $rol = Role::find(2);
-      //$cliente = $cliente->roles()->wherePivot('role_id', '=', 2);
-      return view('reservaciones.create',compact('tipohab', 'rol', 'cliente'));
+
     }
+
+
+
+
+    /**
+    *     Move to stay
+    */
+
+    public function movestay($id)
+    {
+      $reserva = Reservacione::find($id);
+
+      $rol = Role::find(2);
+
+      $entidades = DB::table('reservaciones')
+      ->where('reservaciones.id', '=', $id)
+      ->join('reservacion_habitaciones', 'reservaciones.id', '=', 'reservacion_habitaciones.reservacione_id')
+      ->join('reservacion_entidad_roles', 'reservacion_entidad_roles.reservacion_habitacione_id', '=', 'reservacion_habitaciones.id')
+      ->join('entidade_role', 'entidade_role.id', '=', 'reservacion_entidad_roles.entidade_role_id')
+      ->join('entidades', 'entidades.id', '=', 'entidade_role.entidade_id')
+      ->select('entidades.id', 'entidades.nombres', 'entidades.apellidos',
+        'reservacion_entidad_roles.encargado', 'entidade_role.role_id', 'reservacion_habitaciones.habitacione_id')->get();
+
+      return view('reservaciones.movestay',compact('reserva', 'entidades', 'id', 'rol'));
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -50,8 +78,17 @@ class ReservacioneController extends Controller
     {
         //dd($request->all());
 
-        //---------- Guardar la Reserva -------------
-        $reserva = Reservacione::create($request->all());
+        if (!empty($request->reservacione_id)) { //si es una hab. adicional a la reserva
+
+              $id = $request->reservacione_id;
+
+              $reserva = Reservacione::find($id); // busca la estadia
+
+        } else {
+
+            //---------- Guardar la Reserva -------------
+            $reserva = Reservacione::create($request->all());
+        }
 
         //---------- Guardar la Reservacion Habitacion -------------
         $reservacionhab = new ReservacionHabitacione();
@@ -59,7 +96,10 @@ class ReservacioneController extends Controller
         $reservacionhab->fechasalida = $request->fechasalida;
         $reservacionhab->tarifa_id = $request->tarifa_id;
         $reservacionhab->habitacione_id = $request->habitacione_id;
+
         $reserva->reservacionhabitaciones()->save($reservacionhab);
+
+        //dd($reservacionhab);
 
         //---------- Guardar las Entidades y su rol -------------
 
@@ -73,21 +113,62 @@ class ReservacioneController extends Controller
 
                               ));
               }
+          }
+
+            //  dd($containers);
 
               $role = Role::find(1);
 
               $entidadrole = $role->entidades()->saveMany($containers);
 
-              dd($entidadrole);
-         }
+        //---------- Si es una reserva de un Cliente -------------
+            if (!empty($request->entidadrole_id)) {
+                 $containers2[] = [
+                                    'entidade_role_id'=>$request->entidadrole_id,
+                                    'reservacione_id'=> $reserva->id,
+                                    'encargado'=> 1,
 
-         if (!empty($request->entidadrole_id)) {
+                                 ];
 
-         }
+             }
+        //dd($containers2);
 
-       //---------- Guardar la Entidade Role - Reservacione -------------
+        //---------- Busca la EntidadRole -------------
 
-       $reservacionhab->entidades()->saveMany($containers);
+              foreach($entidadrole as $en){
+                     $entr = $en->id;
+                     $entidadrol[] = Entidade::find($entr)->roles->pluck('pivot.id')->all();
+
+              }
+
+      //---------- Guardar la Reservacion - EntidadRole-------------
+
+              foreach($entidadrol as $key3=> $n) //recorre todas las entidadesRol de la Reserva
+              {
+
+                  $identidadrol = implode($entidadrol[$key3]);
+                  if (!empty($request->entidadrole_id)) {
+                      $encargado = 0;
+                  } elseif($key3 == 0 && empty($request->reservacione_id)) { // el encargado es el primero que se ingreso
+                      $encargado = 1;
+                  } else{
+                      $encargado = 0;
+                  }
+                  //dd($key3);
+                  $containers2[] = [
+                                 'entidade_role_id'=>$identidadrol,
+                                 //'reservacione_id'=> $reserva->id,
+                                 'encargado'=> $encargado,
+                                 'reservacion_habitacione_id'=> $reservacionhab->id,
+
+                              ];
+                }
+
+              //dd($containers2);
+
+             $reservacionentidadrol = ReservacionEntidadRole::insert($containers2);
+
+             return redirect()->to("reservaciones")->with('msj', 'Datos guardados');
 
 
     }
@@ -100,7 +181,18 @@ class ReservacioneController extends Controller
      */
     public function show($id)
     {
-        //
+        $reserva = Reservacione::find($id);
+
+        $entidades = DB::table('reservaciones')
+        ->where('reservaciones.id', '=', $id)
+        ->join('reservacion_habitaciones', 'reservaciones.id', '=', 'reservacion_habitaciones.reservacione_id')
+        ->join('reservacion_entidad_roles', 'reservacion_entidad_roles.reservacion_habitacione_id', '=', 'reservacion_habitaciones.id')
+        ->join('entidade_role', 'entidade_role.id', '=', 'reservacion_entidad_roles.entidade_role_id')
+        ->join('entidades', 'entidades.id', '=', 'entidade_role.entidade_id')
+        ->select('entidades.nombres', 'entidades.apellidos',
+         'reservacion_entidad_roles.encargado', 'reservacion_entidad_roles.reservacion_habitacione_id')->get();
+
+        return view('reservaciones.show',compact('reserva', 'entidades'));
     }
 
     /**
