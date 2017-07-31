@@ -88,3 +88,20 @@ h3.destacado {
     background-color: #B287F6;
     border-color: #B287F6;
 }
+
+hr.separador {
+    color: #007F86;
+    border-bottom: 1px solid #007F86;
+}
+
+.col-lg-12.bottom {
+    margin-top: 2em;
+}
+
+.col-lg-8.reserva {
+    margin-bottom: 1.5em;
+}
+
+td.opciones  {
+    float: right;
+}

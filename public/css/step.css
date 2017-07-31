@@ -159,6 +159,7 @@ input:checked + .step:last-of-type span:before {
 }
 
 label.next {
+    margin-top:1em;
     color: #fff!important;
     background-color: #5cb85c;
     border-color: #4cae4c;

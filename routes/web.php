@@ -103,7 +103,7 @@ Route::resource('/estadias', 'EstadiaController');
 Route::resource('/estadiaadd', 'EstadiaController');
 Route::get('/estadias/{estadia_id}/show', 'EstadiaController@show');
 Route::get('film/{id}', 'EstadiaController@GetFilmBYid');
-Route::post('film/{id}{date}', 'EstadiaController@GetFilmBYid');
+
 Route::get('/estadias/{estadia_id}/createadicional', 'EstadiaController@createadicional');
 
 //Tarifas

@@ -67,6 +67,21 @@
                      </div>
                   </div>
 
+                  <div class="col-lg-12">
+                    <div class="form-group">
+                      <label for="titulo" class="col-sm-2 control-label">Fecha de Salida</label>
+                        <div class="col-sm-8">
+                          <div class="input-group">
+                              <input type="text" class="form-control datepicker" name="fechasalida" track-by="salida"
+                              v-model="film2" v-on:change="GetActors()"  v-bind:disabled="disableWhenSelect">
+                              <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
                  <div class="col-lg-6">
                     <label for="titulo" class="col-sm-4 control-label">Número</label>
                       <div class="col-sm-8">
@@ -77,21 +92,7 @@
                      </div>
                   </div>
 
-                <div id="calendar"></div>
 
-                  <div class="col-lg-12">
-                    <div class="form-group">
-                      <label for="titulo" class="col-sm-2 control-label">Fecha de Salida</label>
-                        <div class="col-sm-8">
-                          <div class="input-group">
-                              <input type="text" class="form-control datepicker" name="fechasalida">
-                              <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
 
 
                   <div class="col-lg-12">
@@ -331,6 +332,7 @@ new Vue({
      },
      disableWhenSelect:false,
      film: [],
+     film2: [],
      habitacione: [],
      tarifa: [],
      actorsShow:true,
@@ -351,9 +353,9 @@ new Vue({
      Vue.delete(this.docs, index);
    },
     GetActors: function() {
-      if(this.film !== ''){
+      if(this.film !== '' && this.film2 !== ''){
         this.disableWhenSelect = false;
-        this.getAllactorFormDataBse(this.film);
+        this.getAllactorFormDataBse(this.film, this.film2);
         this.actorsShow = true;
         this.actorsShow2 = true;
         this.disableWhenSelect = false;
@@ -363,8 +365,8 @@ new Vue({
         alert('Please select Film')
       }
     },
-    getAllactorFormDataBse:function(id, index){
-      this.$http.get('/film/'+ id).then(function(response){
+    getAllactorFormDataBse:function(id, salida, index){
+      this.$http.get('/film/'+ id + salida).then(function(response){
         //done
         //back with data
         //back with out data

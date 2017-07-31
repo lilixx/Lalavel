@@ -21,14 +21,52 @@
   @endforeach
 
   @foreach($reserva->reservacionhabitaciones as $rh)
-  Fecha: {{$rh->fechaentrada}} / {{$rh->fechasalida}} <br/>
-  Habitación: {{$rh->habitacione->numero}} ({{$rh->habitacione->habitaciontipo->nombre}}) <br/>
-  @foreach ($entidades as $en)
-    @if($en->encargado != 1 && $en->reservacion_habitacione_id == $rh->id)
-      {{$en->nombres}} {{$en->apellidos}}<br/>
-    @endif
-  @endforeach
-  <br/>
+      <div class="col-lg-12">
+        <div class="col-lg-8 reserva">
+        Fecha: {{$rh->fechaentrada}} / {{$rh->fechasalida}} <br/>
+        Habitación: {{$rh->habitacione->numero}} ({{$rh->habitacione->habitaciontipo->nombre}}) <br/>
+      </div>
+      <div class="col-lg-4">
+        <a href="" class="btn btn-primary" title="Modificar">
+         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+      </div>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Huéspedes</th>
+            <th><a href="" class="btn btn-info" title="Agregar Huésped">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+            </th>
+          </tr>
+          <tr>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+
+          <tbody>
+             @foreach ($entidades as $en)
+               @if($en->reservacion_habitacione_id == $rh->id)
+                 <tr>
+                       <td>
+                           {{$en->nombres}} {{$en->apellidos}}
+                       </td>
+                    <td>
+                      <a href="" class="btn btn-primary" title="Modificar">
+                       <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                       <a href="#" class="btn btn-danger" title="Dar de baja">
+                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                    </td>
+                  </tr>
+                @endif
+              @endforeach
+          </tbody>
+
+        </table>
+          <hr class="separador">
+
+     </div>
 
   @endforeach
 

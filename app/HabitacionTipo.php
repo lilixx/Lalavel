@@ -13,6 +13,8 @@ class HabitacionTipo extends Model
     public function habitacione()
     {
        return $this->hasMany('\App\Habitacione', 'habitacion_tipo_id')->where('habitaciones.disponible', '=', 1);
+      // ->where('reservacion_habitaciones.fechasalida', '>=', $salida)
+      // ->orWhere('reservacion_habitaciones.fechasalida', '>', $salida);
     }
 
     public function tarifa()

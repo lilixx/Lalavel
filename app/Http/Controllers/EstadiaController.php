@@ -69,8 +69,7 @@ class EstadiaController extends Controller
        //$tipohab = HabitacionTipo::find($id);
       //  dd($tipohab->habitaciones);
         //return HabitacionTipo::where('id', $id)->with('habitacione')->get();
-
-        return HabitacionTipo::where('id', $id)->with('habitacione')->with('tarifa')->get();
+      return HabitacionTipo::where('id', $id)->with('habitacione')->with('tarifa')->get();
     }
 
     /**

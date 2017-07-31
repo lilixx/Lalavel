@@ -64,16 +64,19 @@
                   <input type="hidden" name="reservacione_id" value="{{$id}}">
 
                  <div class="col-lg-6">
+                   <div class="form-group">
                     <label for="titulo" class="col-sm-4 control-label">Número</label>
                       <div class="col-sm-8">
                           <select name="habitacione_id[]" class="form-control">
                             <option selected="selected" value="{{$rh->habitacione->id}}">{{$rh->habitacione->numero}}</option>
                           </select>
                       </div>
+                    </div>
                   </div>
 
 
                   <div class="col-lg-6">
+                    <div class="form-group">
                       <label for="titulo" class="col-sm-4 control-label">Fecha de Salida</label>
                         <div class="col-sm-8">
                           <div class="input-group">
@@ -82,23 +85,28 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                               </div>
                           </div>
-                        </div>
-                  </div>
-
-
-                  <div class="col-lg-6">
-                     <label for="titulo" class="col-sm-2 control-label">Tarifa</label>
-                       <div class="col-sm-8">
-                         <select name="tarifa_id[]" class="form-control">
-                               <option selected="selected" value="{{$rh->tarifa->id}}">${{$rh->tarifa->valor}} - {{$rh->tarifa->nombre}}</option>
-                         </select>
+                         </div>
                       </div>
                    </div>
 
 
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="titulo" class="col-sm-4 control-label">Tarifa</label>
+                        <div class="col-sm-8">
+                          <select name="tarifa_id[]" class="form-control">
+                               <option selected="selected" value="{{$rh->tarifa->id}}">${{$rh->tarifa->valor}} - {{$rh->tarifa->nombre}}</option>
+                          </select>
+                        </div>
+                      </div>
+                   </div>
 
 
              </div> <!-- End div col 12 -->
+
+          <div class="col-lg-12">
+             <hr class="separador">
+           </div>
 
           @endforeach
 
@@ -106,7 +114,7 @@
 
 
 
-       <div class="col-lg-12">
+       <div class="col-lg-12 bottom">
           <label class="next" for="step_2">
             <span class="glyphicon glyphicon-arrow-right"aria-hidden="true"></span>
             Siguiente
@@ -188,18 +196,7 @@
                         </div>
                      </div>
 
-                     <div class="col-lg-6">
-                       <div class="col-lg-8">
-                         <div class="form-group">
-                          <label for="titulo" class="col-sm-2 control-label">Habitación</label>
-                            <div class="col-sm-10">
-                              <select name="habhuesped_id[]" class="form-control">
-                                <option selected="selected" value="{{$en->habitacione_id}}">{{$en->habitacione_id}}</option>
-                              </select>
-                              </div>
-                            </div>
-                         </div>
-                       </div>
+                 <input type="hidden" name="habhuesped_id[]" value="{{$en->habitacione_id}}">
 
                   @elseif($en->encargado == 1 && $en->role_id == 2)
                     <div class="col-lg-12">
@@ -245,10 +242,10 @@
               @endverbatim
                 @foreach ($entidades as $en)
                   @if($en->encargado != 1)
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="col-lg-9">
                       <div class="form-group">
-                       <label for="titulo" class="col-sm-2 control-label">Nombres</label>
+                       <label for="titulo" class="col-sm-2 control-label">Nombre</label>
                          <div class="col-sm-10">
                            <select name="entidade_id[]" class="form-control">
                              <option selected="selected" value="{{$en->id}}">{{$en->nombres}} {{$en->apellidos}}</option>
@@ -258,18 +255,8 @@
                       </div>
                   </div>
 
-                  <div class="col-lg-6">
-                    <div class="col-lg-8">
-                      <div class="form-group">
-                       <label for="titulo" class="col-sm-2 control-label">Habitación</label>
-                         <div class="col-sm-10">
-                           <select name="habhuesped_id[]" class="form-control">
-                             <option selected="selected" value="{{$en->habitacione_id}}">{{$en->habitacione_id}}</option>
-                           </select>
-                           </div>
-                         </div>
-                      </div>
-                    </div>
+                  <input type="hidden" name="habhuesped_id[]" value="{{$en->habitacione_id}}">
+
 
 
                    @endif
@@ -285,10 +272,10 @@
         @endverbatim
           @foreach ($entidades as $en)
 
-          <div class="col-lg-6">
+          <div class="col-lg-12">
             <div class="col-lg-8">
               <div class="form-group">
-               <label for="titulo" class="col-sm-2 control-label">Nombres</label>
+               <label for="titulo" class="col-sm-2 control-label">Nombre</label>
                  <div class="col-sm-10">
                    <select name="entidade_id[]" class="form-control">
                      <option selected="selected" value="{{$en->id}}">{{$en->nombres}} {{$en->apellidos}}</option>
@@ -298,18 +285,7 @@
               </div>
             </div>
 
-            <div class="col-lg-6">
-              <div class="col-lg-8">
-                <div class="form-group">
-                 <label for="titulo" class="col-sm-2 control-label">Habitación</label>
-                   <div class="col-sm-10">
-                     <select name="habhuesped_id[]" class="form-control">
-                       <option selected="selected" value="{{$en->habitacione_id}}">{{$en->habitacione_id}}</option>
-                     </select>
-                     </div>
-                   </div>
-                </div>
-              </div>
+             <input type="hidden" name="habhuesped_id[]" value="{{$en->habitacione_id}}">
 
            @endforeach
 
