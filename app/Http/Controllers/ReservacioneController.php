@@ -189,7 +189,7 @@ class ReservacioneController extends Controller
         ->join('reservacion_entidad_roles', 'reservacion_entidad_roles.reservacion_habitacione_id', '=', 'reservacion_habitaciones.id')
         ->join('entidade_role', 'entidade_role.id', '=', 'reservacion_entidad_roles.entidade_role_id')
         ->join('entidades', 'entidades.id', '=', 'entidade_role.entidade_id')
-        ->select('entidades.nombres', 'entidades.apellidos',
+        ->select('entidades.nombres', 'entidades.apellidos', 'entidades.id',
          'reservacion_entidad_roles.encargado', 'reservacion_entidad_roles.reservacion_habitacione_id')->get();
 
         return view('reservaciones.show',compact('reserva', 'entidades'));

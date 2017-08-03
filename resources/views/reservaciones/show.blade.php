@@ -27,7 +27,7 @@
         Habitación: {{$rh->habitacione->numero}} ({{$rh->habitacione->habitaciontipo->nombre}}) <br/>
       </div>
       <div class="col-lg-4">
-        <a href="" class="btn btn-primary" title="Modificar">
+        <a href="<?php echo  url('/');?>/reservahab/{{$rh->id}}/edit" class="btn btn-primary" title="Modificar">
          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
       </div>
 
@@ -35,7 +35,7 @@
         <thead>
           <tr>
             <th>Huéspedes</th>
-            <th><a href="" class="btn btn-info" title="Agregar Huésped">
+            <th><a href="<?php echo  url('/');?>/reservaentidad/{{$rh->id}}/createhuesped" class="btn btn-info" title="Agregar Huésped">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
             </th>
           </tr>
@@ -53,7 +53,7 @@
                            {{$en->nombres}} {{$en->apellidos}}
                        </td>
                     <td>
-                      <a href="" class="btn btn-primary" title="Modificar">
+                      <a href="<?php echo  url('/');?>/huespedes/{{$en->id}}/edit" class="btn btn-primary" title="Modificar">
                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
                        <a href="#" class="btn btn-danger" title="Dar de baja">
                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>

@@ -250,11 +250,12 @@ class EstadiaController extends Controller
        $estadia = Estadia::find($id);
 
        $entidades = DB::table('entidade_estadia_habitacione')
+       ->where('entidade_estadia_habitacione.activo', '=', 1)
        ->join('estadia_habitaciones', 'entidade_estadia_habitacione.estadia_habitacione_id', '=', 'estadia_habitaciones.id')
        ->where('estadia_habitaciones.estadia_id', '=', $id)
        ->join('entidades', 'entidades.id', '=', 'entidade_estadia_habitacione.entidade_id')
-       ->select('entidade_estadia_habitacione.id', 'entidade_estadia_habitacione.estadia_habitacione_id as idestadiahab',
-        'entidades.nombres', 'entidades.apellidos')->get();
+       ->select('entidade_estadia_habitacione.id as identidadesthab', 'entidade_estadia_habitacione.estadia_habitacione_id as idestadiahab',
+        'entidades.nombres', 'entidades.apellidos', 'entidades.id as identidad')->get();
 
        return view('estadias.show',compact('estadia', 'entidades'));
 

@@ -1,9 +1,10 @@
 <?php
 use App\Categoria;
-use App\EstadiaHabitacione;
 use Illuminate\Support\Facades\Input;
 use App\HabitacionTipo;
+use App\EstadiaHabitacion;
 use App\Habitacione;
+use App\ReservacionHabitacione;
 use App\Role;
 
 /*
@@ -103,6 +104,12 @@ Route::resource('/estadias', 'EstadiaController');
 Route::resource('/estadiaadd', 'EstadiaController');
 Route::get('/estadias/{estadia_id}/show', 'EstadiaController@show');
 Route::get('film/{id}', 'EstadiaController@GetFilmBYid');
+Route::resource('/estadiahab', 'EstadiaHabitacionController');
+Route::get('/estadiahab/{reservahab_id}/edit', 'EstadiaHabitacionController@edit');
+Route::resource('/estadiaentidad', 'EstadiaHabitacionController');
+Route::get('/estadiaentidad/{estadiahabitacion}/createhuesped', 'EstadiaHabitacionController@createhuesped');
+Route::resource('/estadiaentidadadd', 'EstadiaHabitacionController');
+Route::get('/estadiahab/{id}/move/', 'EstadiaHabitacionController@move');
 
 Route::get('/estadias/{estadia_id}/createadicional', 'EstadiaController@createadicional');
 
@@ -115,6 +122,12 @@ Route::resource('/reservaciones', 'ReservacioneController');
 Route::get('/reservaciones/{reserva_id}/show', 'ReservacioneController@show');
 Route::get('/reservaciones/{reserva_id}/estadia', 'ReservacioneController@movestay');
 Route::resource('/reservacionesadd', 'ReservacioneController');
+Route::resource('/reservahab', 'ReservacionHabitacioneController');
+Route::resource('/reservaentidad', 'ReservacionEntidadRoleController');
+Route::get('/reservaentidad/{reservahabitacion}/createhuesped', 'ReservacionEntidadRoleController@createhuesped');
+Route::resource('/reservaentidadadd', 'ReservacionEntidadRoleController');
+
+Route::get('/reservahab/{reservahab_id}/edit', 'ReservacionHabitacioneController@edit');
 
 Route::get('/reservaciones/create', function(){
     $tipohab = HabitacionTipo::all();

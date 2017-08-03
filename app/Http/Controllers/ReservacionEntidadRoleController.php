@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Entidade;
+
+use App\Role;
+
+use App\ReservacionEntidadRole;
+
 class ReservacionEntidadRoleController extends Controller
 {
     /**
@@ -23,7 +29,12 @@ class ReservacionEntidadRoleController extends Controller
      */
     public function create()
     {
-        //
+
+    }
+
+    public function createhuesped($id)
+    {
+        return view('reservaentidad.createhuesped',compact('id'));
     }
 
     /**
@@ -34,7 +45,32 @@ class ReservacionEntidadRoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //dd($request->all());
+        $huesped = new Entidade();
+        $huesped->nombres = $request->nombres;
+        $huesped->apellidos = $request->apellidos;
+        $huesped->tipoentidade_id = 1;
+
+        $role = Role::find(1);
+
+        $entidadrole = $role->entidades()->save($huesped); //guarda el huesped y entidadrole
+
+        $entr = $entidadrole->id;
+
+        $entidadrol = Entidade::find($entr)->roles->pluck('pivot.id'); //busca el id de su entidarole
+
+      //  dd($entidadrol[0]);
+
+        $reservaentidad = new ReservacionEntidadRole();
+        $reservaentidad->reservacion_habitacione_id = $request->reservacion_habitacione_id;
+        $reservaentidad->entidade_role_id = $entidadrol[0];
+
+        if($reservaentidad->save()){ //guarda reserva entidad
+           return redirect('reservaciones')->with('msj', 'Datos guardados');
+        } else {
+           return back()->with('errormsj', 'Los datos no se guardaron');
+        }
+        
     }
 
     /**
