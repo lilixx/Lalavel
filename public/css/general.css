@@ -102,8 +102,13 @@ hr.separador {
     margin-bottom: 1.5em;
 }
 
-td.opciones  {
+td.opciones a, td.opciones form {
     float: right;
+    margin-left: 0.5em;
+}
+
+th.opciones {
+    text-align: right;
 }
 
 form {

@@ -235,7 +235,7 @@ class EntidadeController extends Controller
      */
     public function update(Request $request, $id)
     {
-      //  dd($request->all());
+        //dd($request->all());
         $entidad = Entidade::find($id);
 
          if($entidad->update($request->all())){

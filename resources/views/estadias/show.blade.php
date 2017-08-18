@@ -43,20 +43,22 @@
             <tr>
               <td> {{$en->nombres}} {{$en->apellidos}} </td>
               <td class="opciones">
-                <a href="<?php echo  url('/');?>/huespedes/{{$en->identidad}}/edit" class="btn btn-primary" title="Modificar">
-                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                 <a href="<?php echo  url('/');?>/estadiahab/{{$en->identidadesthab}}/move" class="btn btn-success" title="Cambiar a otra Habitación">
-                 <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
 
                 <form method="POST" action="{{ route('estadiahab.update', $en->identidadesthab) }}">
                   <input name="_method" type="hidden" value="PUT">
-                  {{ csrf_field() }}
-                  <input type="hidden" name="fechasalida" value="{{date("Y-m-d")}}">
-                  <input type="hidden" name="activo" value="0">
-                 <button type="submit" class="btn btn-edit" onclick="return confirm('¿Esta seguro de hacer Check out?')">
-                 <span class="glyphicon glyphicon-paste" aria-hidden="true"></span>
-                 </button>
+                   {{ csrf_field() }}
+                    <input type="hidden" name="fechasalidaout" value="{{date("Y-m-d")}}">
+                    <input type="hidden" name="activo" value="0">
+                    <button type="submit" class="btn btn-edit" onclick="return confirm('¿Esta seguro de hacer Check out?')">
+                      <span class="glyphicon glyphicon-paste" aria-hidden="true"></span>
+                   </button>
                 </form>
+
+                <a href="<?php echo  url('/');?>/estadiahab/{{$en->identidadesthab}}/move" class="btn btn-success" title="Cambiar a otra Habitación">
+                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
+
+                <a href="<?php echo  url('/');?>/huespedes/{{$en->identidad}}/edit" class="btn btn-primary" title="Modificar">
+                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
 
 
 

@@ -11,7 +11,10 @@ use App\Estadia;
 use App\EstadiaHabitacione;
 
 use App\EntidadeRole;
+
 use App\Reservacione;
+
+use App\ReservacionHabitacione;
 
 use App\Habitacione;
 
@@ -195,6 +198,20 @@ class EstadiaController extends Controller
               $reserva = Reservacione::find($res);
               $reserva->activo = 0;
               $reserva->update();
+
+              //---------- Pasa a Inactiva la reservacion_habitaciones -------------
+
+              $reservahab = DB::table('reservacion_habitaciones')
+              ->where('reservacion_habitaciones.reservacione_id', '=', $res)
+              ->get();
+
+              foreach($reservahab as $rh){
+                 $hab = $rh->id;
+                 $reshab = ReservacionHabitacione::find($hab);
+                 $reshab->activo = 0;
+                 $reshab->update();
+
+              }
 
         }
 

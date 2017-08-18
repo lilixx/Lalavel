@@ -83,6 +83,9 @@ Route::resource('/habitacionadd', 'HabitacioneController');
 Route::resource('/folios', 'FolioController');
 Route::resource('/folioadd', 'FolioController');
 Route::get('/folios/{folio_id}/show', 'FolioController@show');
+Route::get('/folios/{folio_id}/showstatus', 'FolioController@showstatus');
+Route::put('/folios/{folio_id}/invoicepdf', 'FolioController@invoicepdf')->name('folios.invoicepdf');
+Route::get('/folios/{folio_id}/showinvoice', 'FolioController@showinvoice');
 Route::get('/folios/{folio_id}/createchild', 'FolioController@createchild');
 
 //Folio Restrinccion Categoria
@@ -116,6 +119,23 @@ Route::get('/estadias/{estadia_id}/createadicional', 'EstadiaController@createad
 //Tarifas
 Route::resource('/tarifas', 'TarifaController');
 Route::resource('/tarifaadd', 'TarifaController');
+
+//PDF
+/*Route::get('/test/', function () {
+  $pdf = PDF::loadView('pruebaparapdf');
+  return $pdf->stream();
+}); */
+
+/*Route::get('folios/invoicepdf/', function (Request $request) {
+  $prueba = $request->all();
+  $pdf = PDF::loadView('pruebaparapdf', ['prueba' => $prueba]);
+  return $pdf->stream('pruebaparapdf.pdf');
+})->name('folios.invoicepdf'); */
+
+/*Route::get('/test', function () {
+    return view('pruebaparapdf');
+});*/
+
 
 //Reservaciones
 Route::resource('/reservaciones', 'ReservacioneController');

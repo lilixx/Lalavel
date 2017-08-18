@@ -58,6 +58,7 @@
              <label for="titulo" class="col-sm-4 control-label">Descuento</label>
              <div class="col-sm-8">
                <select v-model="find.value3" id="descuento_id"  class="form-control input-sm" name="descuento_id[]" value="descuento_id">
+               <option value="0" selected="true" disabled="true">Descuento</option>  
                  @foreach ($descuento as $desc)
                    <option value="{{$desc->id}}">{{ $desc->porcentaje}}%</option>
                 @endforeach
@@ -104,7 +105,7 @@
                  @foreach ($descuento as $desc)
                    <option value="{{$desc->id}}">{{ $desc->porcentaje}}%</option>
                 @endforeach
-            @verbatim    
+            @verbatim
               </select>
             </div>
            </div>

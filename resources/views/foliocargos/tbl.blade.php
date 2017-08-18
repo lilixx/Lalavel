@@ -12,9 +12,9 @@
 @foreach($foliocargo as $n)
   <tr>
     <td>{{ $n->id }}</td>
-    <td>{{ $n->bitacorafoliocargos[0]->user->name}}</td>
+    <td></td>
     <td>
-      {{ $n->folio->entidadrole->entidade->nombres }} {{ $n->folio->entidadrole->entidade->apellidos }}
+
     </td>
     <td>
       {{ $n->servicio->nombreservicio }} ({{ $n->cantidad }})

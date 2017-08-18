@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Input;
 
 use App\Role;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class EstadiaHabitacionController extends Controller
 {
@@ -139,26 +139,39 @@ class EstadiaHabitacionController extends Controller
           $valth = $tipohab;
 
 
-            $hablibres = DB::table('habitaciones')
+            $hablibres2 = DB::table('habitaciones')
               ->where('habitaciones.habitacion_tipo_id', '=', $valth)
               ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
               ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
               ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
-                   {
-                      $query->from('estadia_habitaciones')
-                      ->where('estadia_habitaciones.fechasalida', '>=', $fechasalida)
-                      ->orWhere('estadia_habitaciones.fechasalida', '>', $fechaentrada)
-                      ->select('estadia_habitaciones.habitacione_id');
-                   })
-              ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
+                         {
+                             $query->from('reservacion_habitaciones')
+                             ->where('reservacion_habitaciones.fechasalida', '>=', $fechasalida)
+                             ->orWhere('reservacion_habitaciones.fechasalida', '>', $fechaentrada)
+                             ->select('reservacion_habitaciones.habitacione_id');
+                          });
+          //  dd($hablibres2);
+
+            $hablibres = DB::table('habitaciones')
+            ->where('habitaciones.habitacion_tipo_id', '=', $valth)
+            ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
+            ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
+            ->WhereIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
                   {
-                      $query->from('reservacion_habitaciones')
-                      ->where('reservacion_habitaciones.fechasalida', '>=', $fechasalida)
-                      ->orWhere('reservacion_habitaciones.fechasalida', '>', $fechaentrada)
-                      ->select('reservacion_habitaciones.habitacione_id');
-                  })
+                       $query->from('reservacion_habitaciones')
+                    //  ->where('reservacion_habitaciones.activo', '=', 0)
+                        ->where('reservacion_habitaciones.fechasalida', '<=', $fechaentrada)
+                       ->orWhere('reservacion_habitaciones.fechaentrada', '>=', $fechasalida)
+
+                       ->select('reservacion_habitaciones.habitacione_id');
+               } )
+            ->union($hablibres2)
 
              ->get();
+
+            // dd($hablibres);
+
+
 
 
           $tipohab = HabitacionTipo::all();
@@ -186,6 +199,7 @@ class EstadiaHabitacionController extends Controller
      */
     public function update(Request $request, $id)
     {
+       //dd($request->all());
       // Cambia de Habitacion al Huesped (funcion move)
         if (!empty($request->identidadestadiahab)) {
           $id = $request->identidadestadiahab;
@@ -194,7 +208,7 @@ class EstadiaHabitacionController extends Controller
           return redirect('estadias')->with('msj', 'Datos guardados');
 
       //Check out del Huesped
-        } elseif(!empty($request->fechasalida)) {
+    } elseif(!empty($request->fechasalidaout)) {
             $fechasalida= $request->fechasalida;
             DB::table('entidade_estadia_habitacione')->where('id', $id)->update(['fechasalida'=>$fechasalida, 'activo'=>0]);
             return redirect('estadias')->with('msj', 'Datos guardados');

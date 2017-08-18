@@ -80,9 +80,9 @@
                      <div class="col-sm-8">
                        <div class="input-group">
                            <input id="EffectiveDate" type="text" class="form-control datepicker" name="fechasalida"
-                           @if(empty(Input::get('fechaesalida')))
+                           @if(empty(Input::get('fechasalida')))
                              value="{{$reservahab->fechasalida}}">
-                           @else value="{{Input::get('fechasalida')}}">
+                            @else value="{{Input::get('fechasalida')}}">
                            @endif
                            <div class="input-group-addon">
                              <span class="glyphicon glyphicon-calendar"></span>
@@ -124,7 +124,7 @@
                   </div>
                </div>
 
-              
+
                <div class="col-lg-12">
                   <label for="titulo" class="col-sm-2 control-label">Tarifa</label>
                   <div class="col-sm-8">
