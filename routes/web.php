@@ -3,6 +3,7 @@ use App\Categoria;
 use Illuminate\Support\Facades\Input;
 use App\HabitacionTipo;
 use App\EstadiaHabitacion;
+use App\TasaCambio;
 use App\Habitacione;
 use App\ReservacionHabitacione;
 use App\Role;
@@ -63,7 +64,7 @@ Route::resource('/paiseadd', 'PaiseController');
 Route::resource('/supercategorias', 'SuperCategoriaController');
 Route::resource('/scategoriaadd', 'SuperCategoriaController');
 
-//Super Categorias
+//Categorias
 Route::resource('/categorias', 'CategoriaController');
 Route::resource('/categoriaadd', 'CategoriaController');
 
@@ -86,6 +87,9 @@ Route::get('/folios/{folio_id}/show', 'FolioController@show');
 Route::get('/folios/{folio_id}/showstatus', 'FolioController@showstatus');
 Route::put('/folios/{folio_id}/invoicepdf', 'FolioController@invoicepdf')->name('folios.invoicepdf');
 Route::get('/folios/{folio_id}/showinvoice', 'FolioController@showinvoice');
+Route::get('/folios/{folio_id}/checkout', 'FolioController@checkout');
+Route::put('/folios/{folio_id}/out', 'FolioController@out')->name('folios.out');
+Route::put('/folios/{folio_id}/baja', 'FolioController@baja')->name('folios.baja');
 Route::get('/folios/{folio_id}/createchild', 'FolioController@createchild');
 
 //Folio Restrinccion Categoria
@@ -120,22 +124,9 @@ Route::get('/estadias/{estadia_id}/createadicional', 'EstadiaController@createad
 Route::resource('/tarifas', 'TarifaController');
 Route::resource('/tarifaadd', 'TarifaController');
 
-//PDF
-/*Route::get('/test/', function () {
-  $pdf = PDF::loadView('pruebaparapdf');
-  return $pdf->stream();
-}); */
-
-/*Route::get('folios/invoicepdf/', function (Request $request) {
-  $prueba = $request->all();
-  $pdf = PDF::loadView('pruebaparapdf', ['prueba' => $prueba]);
-  return $pdf->stream('pruebaparapdf.pdf');
-})->name('folios.invoicepdf'); */
-
-/*Route::get('/test', function () {
-    return view('pruebaparapdf');
-});*/
-
+//Tasa de TasaCambio
+Route::resource('/tasacambios', 'TasaCambioController');
+Route::resource('/tasacambioadd', 'TasaCambioController');
 
 //Reservaciones
 Route::resource('/reservaciones', 'ReservacioneController');

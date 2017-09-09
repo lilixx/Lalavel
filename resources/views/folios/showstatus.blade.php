@@ -62,7 +62,9 @@ Fecha: {{$now = \Carbon\Carbon::now()->format('Y-m-d')}}
               <td>
                 @if($car->descuento_id != NULL)
                     <span>${{$car->servicio->precio * $car->cantidad - (($car->servicio->precio * $car->cantidad) * ($car->descuento->porcentaje /100))}} </span>
-                @else
+                @elseif ($car->servicio->categoria->id == 1)
+                    <span>${{($car->estadiahabitacion->tarifa->valor) * $car->cantidad}} </span>
+                @else    
                     <span>${{$car->servicio->precio * $car->cantidad}} </span>
                 @endif
               </td>

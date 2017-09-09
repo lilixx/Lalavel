@@ -15,7 +15,6 @@ class CreateTasaCambiosTable extends Migration
     {
         Schema::create('tasa_cambios', function (Blueprint $table) {
             $table->increments('id');
-            $table->float('valorcompra');
             $table->float('valorventa');
             $table->boolean('activo')->default(1);
             $table->timestamps();

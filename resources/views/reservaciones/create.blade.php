@@ -2,7 +2,6 @@
  use Illuminate\Support\Facades\Input; ?>
 <!--vue -->
 <script src="{{asset('js/vue.min.js')}}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.js"></script>
 <script src="{{asset('js/vue-resource.min.js')}}"></script>
 
 <!-- Jquery -->

@@ -80,9 +80,30 @@
 
 <div class="col-lg-10">
 
-    @if($folio->padre_id == NULL)
+ @if((!($cargo->isEmpty()) || (!empty($folio->estadia_id))) && $foliohijo->isEmpty())
+  <a style="float:right; margin-left: 0.5em;" href="<?php echo  url('/');?>/folios/{{ $folio->id }}/showinvoice" class="btn btn-danger">
+  <span class="fa fa-print" aria-hidden="true"></span> Factura</a>
+ @endif
+
+ @if(($cargo->isEmpty() && (empty($folio->estadia_id))))
+
+   <form class="form-horizontal baja" role="form" method="POST" action="{{ route('folios.baja', $folio->id ) }}" enctype="multipart/form-data"
+     onsubmit="return confirm('¿Está seguro de dar de baja al Folio?')">
+    <input name="_method" type="hidden" value="PUT">
+    {{ csrf_field() }}
+     <button type="submit" class="btn btn-warning">
+       <span class="fa fa-level-down" aria-hidden="true"> Dar de Baja</span>
+     </button>
+  </form>
+
+ @endif
+
+  <a style="float:right; margin-left: 0.5em;" href="<?php echo  url('/');?>/folios/{{ $folio->id }}/showstatus" class="btn btn-edit">
+  <span class="fa fa-star-half-o" aria-hidden="true"></span> Estado de Cuenta</a>
+
+    @if($folio->foliopadre_id == NULL)
       <td>
-        <a style="float:right; margin-left: 0.5em;" href="<?php echo  url('/');?>/folios/{{ $folio->id }}/createchild" class="btn btn-warning">
+        <a style="float:right; margin-left: 0.5em;" href="<?php echo  url('/');?>/folios/{{ $folio->id }}/createchild" class="btn btn-info">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Folio extra</a>
       </td>
     @endif
@@ -118,9 +139,11 @@
     <tbody>
       <tr>
          <td>
-            @foreach ($folio->estadia->estadiahabitaciones as $esthab)
-              {{$esthab->habitacione->numero}},
-            @endforeach
+            @if (!empty($folio->estadia_id))
+              @foreach ($folio->estadia->estadiahabitaciones as $esthab)
+                {{$esthab->habitacione->numero}},
+              @endforeach
+            @endif
          </td>
       </tr>
     </tbody>

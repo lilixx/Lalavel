@@ -66,6 +66,10 @@
          <li class="subm"><i class="fa fa-object-ungroup float-right"></i>Super Categorías</li></a>
       </ul>
 
+      <ul><a class="m5" href="<?php echo  url('/');?>/tasacambios">
+         <li class="subm"><i class="fa fa-balance-scale float-right"></i>Tasa de Cambio</li></a>
+      </ul>
+
       <ul><a class="m5" href="<?php echo  url('/');?>/descuentos">
          <li class="subm"><i class="fa fa-gift float-right"></i>Descuentos</li></a>
       </ul>

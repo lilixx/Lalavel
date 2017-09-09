@@ -18,10 +18,10 @@
 
     <!-- Scripts -->
     <script>
-        window.Laravel = <?php echo json_encode([
-            'csrfToken' => csrf_token(),
-        ]); ?>
-    </script>
+          window.Laravel = {!! json_encode([
+              'csrfToken' => csrf_token(),
+          ]) !!};
+      </script>
 
 </head>
 <body>
@@ -84,14 +84,19 @@
 
         <div class="container">
             <div class="row">
-
-              <div class="col-md-2">
-                  @include('layouts.menu')
-              </div>
-
-                <div class="col-md-9 col-md-offset-1">
+              @if (Auth::guest())
+                <div class="col-md-12">
                    @yield('content')
                 </div>
+              @else
+                  <div class="col-md-2">
+                      @include('layouts.menu')
+                  </div>
+
+                    <div class="col-md-9 col-md-offset-1">
+                       @yield('content')
+                    </div>
+              @endif
             </div>
         </div>
 
@@ -99,11 +104,13 @@
 
 
     <!-- Scripts -->
-  <!--  <script src="/js/app.js"></script> -->
+    <script src="/js/app.js"></script>
     <script src="/js/vue.min.js"></script>
     <script src="/js/vue-resource.min.js"></script>
     <script src="/js/bootstrap.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+
+
 
 </body>
 </html>

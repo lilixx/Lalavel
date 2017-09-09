@@ -37,8 +37,11 @@
       <a href="folios/{{ $h->id }}/show" class="btn btn-primary" title="Ver">
       <span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
 
-      <a href="#" class="btn btn-danger" title="Dar de baja">
-      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+      <a href="folios/{{ $h->id }}/showstatus" class="btn btn-warning" title="Estado de Cuenta">
+      <span class="fa fa-star-half-o" aria-hidden="true"></span></a>
+
+      <a href="folios/{{ $h->id }}/showinvoice" class="btn btn-danger" title="Factura">
+      <span class="fa fa-print" aria-hidden="true"></span></a>
 
 
     </td>

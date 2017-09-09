@@ -25,6 +25,11 @@ class FolioCargo extends Model
       return $this->belongsTo(Descuento::class);
     }
 
+    public function estadiahabitacion()
+    {
+      return $this->belongsTo('\App\EstadiaHabitacione', 'estadia_habitacione_id');
+    }
+
     public function bitacorafoliocargos()
     {
        return $this->hasMany(BitacoraFolioCargo::class);

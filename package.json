@@ -14,10 +14,14 @@
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^3.2.3",
     "jquery": "^3.1.1",
+    "laravel-elixir": "^4.0.0",
     "laravel-mix": "0.*",
     "lodash": "^4.17.4",
-    "laravel-elixier-vue-2": "^0.2.0",
-    "vue": "^2.1.10",
+    "vue": "1.0.28",
     "vue-resource": "^1.0.3"
+  },
+  "dependencies": {
+    "vue-html-loader": "^1.2.4",
+    "vue-loader": "^8.5.0"
   }
 }

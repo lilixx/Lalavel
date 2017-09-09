@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\TasaCambio;
+
 class TasaCambioController extends Controller
 {
     /**
@@ -13,7 +15,8 @@ class TasaCambioController extends Controller
      */
     public function index()
     {
-        //
+      $tasa = TasaCambio::where('activo', 1)->get();
+      return view('tasacambios.tasacambios',compact('tasa'));
     }
 
     /**
@@ -23,7 +26,7 @@ class TasaCambioController extends Controller
      */
     public function create()
     {
-        //
+        return view('tasacambios.create');
     }
 
     /**
@@ -34,7 +37,20 @@ class TasaCambioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       /* Pasa a inactivo la tasa anterior */
+        $tasaanterior = TasaCambio::where('activo', 1)->first();
+        if (!empty($tasaanterior)){ // si hay una tasa activa
+          $tasaanterior->activo = 0;
+          $tasaanterior->update();
+        }
+
+        $tasa = TasaCambio::create($request->all()); //crea la tasa
+
+       if($tasa->save()){
+         return redirect('tasacambios')->with('msj', 'Datos guardados');
+       } else {
+         return back()->with('errormsj', 'Los datos no se guardaron');
+       }
     }
 
     /**

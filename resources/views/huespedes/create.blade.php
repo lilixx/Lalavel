@@ -1,16 +1,18 @@
 <!--vue -->
 <script src="{{asset('js/vue.min.js')}}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.js"></script>
 <script src="{{asset('js/vue-resource.min.js')}}"></script>
+
 <!-- Jquery -->
-<script src="{{asset('js/jquery-1.11.3.min.js')}}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.8.14/themes/smoothness/jquery-ui.css">
+
 <!-- Datepicker Files -->
 <link rel="stylesheet" href="{{asset('datepicker/css/bootstrap-datepicker3.css')}}">
 <link rel="stylesheet" href="{{asset('datepicker/css/bootstrap-datepicker.standalone.css')}}">
-<script src="{{asset('datepicker/js/bootstrap-datepicker.js')}}"></script>
+
 <!-- Languaje -->
 <script src="{{asset('datepicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
-
 
 @extends('layouts.app')
 
@@ -192,16 +194,13 @@
      </div>
 
 
-   @endverbatim
-   </div> <!--end div app-->
+
 
 
 <!--////////////////////////// Medio de Comunicacion ////////////////////////// -->
 <div class="col-lg-12">
   <h3>Medio de Comunicación</h3>
 </div>
-   @verbatim
-   <div id="app">
 
     <div v-for="find in finds">
       <div class="col-lg-12">
@@ -244,8 +243,10 @@
        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Medio de Comunicación</a>
     </div>
 
-   @endverbatim
  </div><!--end div app -->
+
+   @endverbatim
+
 
 
 <!--////////////////////////// Fin de Medio de Comunicacion ////////////////////////// -->

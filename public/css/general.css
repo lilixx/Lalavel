@@ -114,3 +114,8 @@ th.opciones {
 form {
     display: inline;
 }
+
+form.form-horizontal.baja {
+    float: right;
+    margin-left: 0.5em;
+}

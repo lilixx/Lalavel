@@ -40,7 +40,7 @@ class EstadiaController extends Controller
     public function index()
     {
         $estadia = Estadia::where('activo', 1)->get();
-        return view('estadias.estadias',compact('estadia'));
+        return view('estadias.estadias',compact('estadia')); 
     }
 
     /**

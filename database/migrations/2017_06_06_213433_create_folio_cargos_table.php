@@ -21,6 +21,10 @@ class CreateFolioCargosTable extends Migration
             $table->foreign('folio_id')->references('id')->on('folios');
             $table->integer('descuento_id')->nullable()->unsigned();
             $table->foreign('descuento_id')->references('id')->on('descuentos');
+            $table->integer('tarifa_id')->nullable()->unsigned();
+            $table->foreign('tarifa_id')->references('id')->on('tarifas');
+            $table->integer('estadia_habitacione_id')->nullable()->unsigned();
+            $table->foreign('estadia_habitacione_id')->references('id')->on('estadia_habitaciones');
             $table->integer('cantidad');
             $table->longText('comentariocubeta')->nullable();
             $table->boolean('cubeta')->default(0);
