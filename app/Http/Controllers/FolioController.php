@@ -1,36 +1,36 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Redirect;
 
 use DB;
-use App\Factura;
-use App\FolioRestrinccionCategoria;
+use Teodolinda\Factura;
+use Teodolinda\FolioRestrinccionCategoria;
 
-use App\Folio;
+use Teodolinda\Folio;
 
 use Illuminate\Support\Facades\Input;
 
 use Session;
 
-use App\EntidadRole;
+use Teodolinda\EntidadRole;
 
-use App\Entidade;
+use Teodolinda\Entidade;
 
-use App\Estadia;
+use Teodolinda\Estadia;
 
-use App\Habitacione;
+use Teodolinda\Habitacione;
 
-use App\FolioCargo;
+use Teodolinda\FolioCargo;
 
-use App\TasaCambio;
+use Teodolinda\TasaCambio;
 
-use App\EntidadeEstadiaHabitacione;
+use Teodolinda\EntidadeEstadiaHabitacione;
 
-use App\EstadiaHabitacione;
+use Teodolinda\EstadiaHabitacione;
 
 use Barryvdh\DomPDF\Facade as PDF;
 

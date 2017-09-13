@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console;
+namespace Teodolinda\Console;
 
 use DB;
 use Illuminate\Console\Scheduling\Schedule;

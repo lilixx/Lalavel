@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\ReservacionHabitacione;
+use Teodolinda\ReservacionHabitacione;
 
-use App\HabitacionTipo;
+use Teodolinda\HabitacionTipo;
 
 use Illuminate\Support\Facades\Input;
 
-use App\Role;
+use Teodolinda\Role;
 
 use DB;
 

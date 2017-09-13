@@ -1,32 +1,32 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\HabitacionTipo;
+use Teodolinda\HabitacionTipo;
 
-use App\Estadia;
+use Teodolinda\Estadia;
 
-use App\EstadiaHabitacione;
+use Teodolinda\EstadiaHabitacione;
 
-use App\EntidadeRole;
+use Teodolinda\EntidadeRole;
 
-use App\Reservacione;
+use Teodolinda\Reservacione;
 
-use App\ReservacionHabitacione;
+use Teodolinda\ReservacionHabitacione;
 
-use App\Habitacione;
+use Teodolinda\Habitacione;
 
-use App\Entidade;
+use Teodolinda\Entidade;
 
-use App\Role;
+use Teodolinda\Role;
 
-use App\Folio;
+use Teodolinda\Folio;
 
-use App\Tarifa;
+use Teodolinda\Tarifa;
 
-use App\EntidadeEstadiaHabitacione;
+use Teodolinda\EntidadeEstadiaHabitacione;
 
 use DB;
 

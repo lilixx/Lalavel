@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\HabitacionTipo;
+use Teodolinda\HabitacionTipo;
 
-use App\Tarifa;
+use Teodolinda\Tarifa;
 
 class TarifaController extends Controller
 {
@@ -15,11 +15,12 @@ class TarifaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-      $tarifa = Tarifa::all();
-
-      return view('tarifas.tarifas',compact('tarifa'));
+       $request->user()->authorizeRoles(['Admin']);
+       $tarifa = Tarifa::where('activo', '=', 1)->paginate(10);
+    
+       return view('tarifas.tarifas',compact('tarifa'));
     }
 
     /**
@@ -27,8 +28,9 @@ class TarifaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $tipohab = HabitacionTipo::all();
         return view('tarifas.create',compact('tipohab'));
     }
@@ -41,6 +43,7 @@ class TarifaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $tarifa = Tarifa::create($request->all());
 
         if($tarifa->save()){

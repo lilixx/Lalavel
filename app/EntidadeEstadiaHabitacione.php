@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Teodolinda;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Teodolinda;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,7 +27,7 @@ class FolioCargo extends Model
 
     public function estadiahabitacion()
     {
-      return $this->belongsTo('\App\EstadiaHabitacione', 'estadia_habitacione_id');
+      return $this->belongsTo('\Teodolinda\EstadiaHabitacione', 'estadia_habitacione_id');
     }
 
     public function bitacorafoliocargos()

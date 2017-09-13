@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Habitacione;
+use Teodolinda\Habitacione;
 
-use App\HabitacionTipo;
+use Teodolinda\HabitacionTipo;
 
 class HabitacioneController extends Controller
 {
@@ -15,8 +15,9 @@ class HabitacioneController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin', 'Recepcionista']);
         $habitacion = Habitacione::all();
     //  dd($habitacion);
         return view('habitaciones.habitaciones',compact('habitacion'));
@@ -27,8 +28,9 @@ class HabitacioneController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $habtipo = HabitacionTipo::all();
         return view('habitaciones.create',compact('habtipo'));
     }
@@ -41,6 +43,7 @@ class HabitacioneController extends Controller
      */
     public function store(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $habitacion = Habitacione::create($request->all());
 
         if($habitacion->save()){
@@ -67,8 +70,9 @@ class HabitacioneController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $habitacion = Habitacione::find($id);
         $habtipo = HabitacionTipo::all();
         return view('habitaciones.edit')
@@ -84,6 +88,7 @@ class HabitacioneController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $habitacion = Habitacione::find($id);
 
         if($habitacion->update($request->all())){

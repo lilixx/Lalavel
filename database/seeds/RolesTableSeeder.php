@@ -14,6 +14,8 @@ class RolesTableSeeder extends Seeder
         DB::table('roles')->insert(array(
            array('nombre' => 'Huesped'),
            array('nombre' => 'Cliente'),
+           array('nombre' => 'Recepcionista'),
+           array('nombre' => 'Admin'),
        ));
     }
 }

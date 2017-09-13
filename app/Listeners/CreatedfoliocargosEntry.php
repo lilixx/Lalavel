@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Listeners;
+namespace Teodolinda\Listeners;
 
-use App\Events\Creaciondefoliocargo;
+use Teodolinda\Events\Creaciondefoliocargo;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\BitacoraFolioCargo;
+use Teodolinda\BitacoraFolioCargo;
 use Illuminate\Support\Facades\Auth;
 
 class CreatedfoliocargosEntry

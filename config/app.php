@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Teodolinda'),
 
     /*
     |--------------------------------------------------------------------------
@@ -172,11 +172,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        Teodolinda\Providers\AppServiceProvider::class,
+        Teodolinda\Providers\AuthServiceProvider::class,
+        // Teodolinda\Providers\BroadcastServiceProvider::class,
+        Teodolinda\Providers\EventServiceProvider::class,
+        Teodolinda\Providers\RouteServiceProvider::class,
 
     ],
 

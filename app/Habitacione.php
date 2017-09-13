@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Teodolinda;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +12,7 @@ class Habitacione extends Model
 
       public function habitaciontipo()
       {
-        return $this->belongsTo('\App\HabitacionTipo', 'habitacion_tipo_id');
+        return $this->belongsTo('\Teodolinda\HabitacionTipo', 'habitacion_tipo_id');
       }
 
     

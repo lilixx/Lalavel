@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\TasaCambio;
+use Teodolinda\TasaCambio;
 
 class TasaCambioController extends Controller
 {
@@ -13,10 +13,11 @@ class TasaCambioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-      $tasa = TasaCambio::where('activo', 1)->get();
-      return view('tasacambios.tasacambios',compact('tasa'));
+        $request->user()->authorizeRoles(['Admin', 'Recepcionista']);
+        $tasa = TasaCambio::where('activo', 1)->get();
+        return view('tasacambios.tasacambios',compact('tasa'));
     }
 
     /**
@@ -24,8 +25,9 @@ class TasaCambioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         return view('tasacambios.create');
     }
 
@@ -37,6 +39,7 @@ class TasaCambioController extends Controller
      */
     public function store(Request $request)
     {
+       $request->user()->authorizeRoles(['Admin']);
        /* Pasa a inactivo la tasa anterior */
         $tasaanterior = TasaCambio::where('activo', 1)->first();
         if (!empty($tasaanterior)){ // si hay una tasa activa

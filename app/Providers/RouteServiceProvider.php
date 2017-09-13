@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Teodolinda\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -14,7 +14,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    protected $namespace = 'Teodolinda\Http\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.

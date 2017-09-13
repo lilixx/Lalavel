@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\HabitacionTipo;
+use Teodolinda\HabitacionTipo;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -17,10 +17,11 @@ class HabitacionTipoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-      $habtipo = HabitacionTipo::all();
-      return view('habitaciontipos.habitaciontipos',compact('habtipo'));
+        $request->user()->authorizeRoles(['Admin']);
+        $habtipo = HabitacionTipo::all();
+        return view('habitaciontipos.habitaciontipos',compact('habtipo'));
     }
 
     /**
@@ -28,8 +29,9 @@ class HabitacionTipoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         return view('habitaciontipos.create');
     }
 
@@ -41,6 +43,7 @@ class HabitacionTipoController extends Controller
      */
     public function store(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $habtipo = new HabitacionTipo();
         $habtipo->nombre = $request->nombre;
         $habtipo->tarifainicial = $request->tarifainicial;
@@ -83,8 +86,9 @@ class HabitacionTipoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $habtipo = HabitacionTipo::find($id);
         return view('habitaciontipos.edit')
         ->with(['edit' => true, 'habtipo' => $habtipo]);
@@ -106,7 +110,7 @@ class HabitacionTipoController extends Controller
         } else {
            return back()->with('errormsj', 'Los datos no se guardaron');
         } */
-
+          $request->user()->authorizeRoles(['Admin']);
           $habtipo = HabitacionTipo::find($id);
           $habtipo->nombre = $request->nombre;
           $habtipo->tarifainicial = $request->tarifainicial;

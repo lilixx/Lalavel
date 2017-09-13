@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\HabitacionTipo;
+use Teodolinda\HabitacionTipo;
 
-use App\Entidade;
+use Teodolinda\Entidade;
 
-use App\Role;
+use Teodolinda\Role;
 
-use App\Reservacione;
+use Teodolinda\Reservacione;
 
-use App\ReservacionHabitacione;
+use Teodolinda\ReservacionHabitacione;
 
-use App\ReservacionEntidadRole;
+use Teodolinda\ReservacionEntidadRole;
+
+use Illuminate\Support\Facades\Input;
 
 use DB;
 
@@ -38,7 +40,64 @@ class ReservacioneController extends Controller
      */
     public function create()
     {
+      //  $estadiahab = EstadiaHabitacione::find($id);
+        $tipohab = HabitacionTipo::all();
 
+        $fechaentrada = Input::has('fechaentrada') ? Input::get('fechaentrada') : null;
+        $fechasalida = Input::has('fechasalida') ? Input::get('fechasalida') : null;
+        $tipohab = Input::has('tipohab') ? Input::get('tipohab') : null;
+        $rol = Role::find(2);
+
+        if($fechasalida != null) {
+            $valth = $tipohab;
+
+
+              $hablibres2 = DB::table('habitaciones')
+                ->where('habitaciones.habitacion_tipo_id', '=', $valth)
+                ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
+                ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
+                ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
+                           {
+                               $query->from('reservacion_habitaciones')
+                               ->where('reservacion_habitaciones.fechasalida', '>=', $fechasalida)
+                               ->orWhere('reservacion_habitaciones.fechasalida', '>', $fechaentrada)
+                               ->select('reservacion_habitaciones.habitacione_id');
+                            });
+            //  dd($hablibres2);
+
+              $hablibres = DB::table('habitaciones')
+              ->where('habitaciones.habitacion_tipo_id', '=', $valth)
+              ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
+              ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
+              ->WhereIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
+                    {
+                         $query->from('reservacion_habitaciones')
+                      //  ->where('reservacion_habitaciones.activo', '=', 0)
+                          ->where('reservacion_habitaciones.fechasalida', '<=', $fechaentrada)
+                         ->orWhere('reservacion_habitaciones.fechaentrada', '>=', $fechasalida)
+
+                         ->select('reservacion_habitaciones.habitacione_id');
+                 } )
+              ->union($hablibres2)
+
+               ->get();
+
+              // dd($hablibres);
+
+            $tipohab = HabitacionTipo::all();
+
+            $tarifa = DB::table('tarifas')
+              ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'tarifas.habitaciontipo_id')
+              ->where('habitacion_tipos.id', '=', $valth)
+              ->select('tarifas.id', 'tarifas.valor', 'tarifas.nombre')->get();
+
+        } else {
+            $hablibres = [];
+            $tarifa = [];
+            $tipohab = HabitacionTipo::all(); $valth = 0; }
+
+
+        return view('reservaciones.create', compact(['hablibres'], 'tipohab', 'valth', 'estadiahab', 'tarifa', 'rol'));
     }
 
 
@@ -115,8 +174,6 @@ class ReservacioneController extends Controller
               }
           }
 
-            //  dd($containers);
-
               $role = Role::find(1);
 
               $entidadrole = $role->entidades()->saveMany($containers);
@@ -125,7 +182,7 @@ class ReservacioneController extends Controller
             if (!empty($request->entidadrole_id)) {
                  $containers2[] = [
                                     'entidade_role_id'=>$request->entidadrole_id,
-                                    'reservacione_id'=> $reserva->id,
+                                    'reservacion_habitacione_id'=> $reservacionhab->id,
                                     'encargado'=> 1,
 
                                  ];

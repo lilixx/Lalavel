@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Teodolinda\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -14,20 +14,20 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
 
-        'App\Events\Creaciondefoliocargo' => [
-            'App\Listeners\CreatedfoliocargosEntry',
+        'Teodolinda\Events\Creaciondefoliocargo' => [
+            'Teodolinda\Listeners\CreatedfoliocargosEntry',
         ],
 
-        'App\Events\Enviocubetafoliocargo' => [
-            'App\Listeners\CreatedenviocubetaEntry',
+        'Teodolinda\Events\Enviocubetafoliocargo' => [
+            'Teodolinda\Listeners\CreatedenviocubetaEntry',
         ],
 
-        'App\Events\Cambiodefoliocargo' => [
-            'App\Listeners\CreatecambiofoliocargoEntry',
+        'Teodolinda\Events\Cambiodefoliocargo' => [
+            'Teodolinda\Listeners\CreatecambiofoliocargoEntry',
         ],
 
-        'App\Events\Revisiondecubetafoliocargo' => [
-            'App\Listeners\CreaterevisioncubetafoliocargoEntry',
+        'Teodolinda\Events\Revisiondecubetafoliocargo' => [
+            'Teodolinda\Listeners\CreaterevisioncubetafoliocargoEntry',
         ],
     ];
 

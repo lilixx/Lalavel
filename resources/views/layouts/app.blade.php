@@ -8,7 +8,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Mansión Teodolinda') }}</title>
+
+    <link rel="icon" href="{{{ asset('img/favicon.png') }}}">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -40,7 +42,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'Mansión Teodolinda') }}
                     </a>
                 </div>
 
@@ -58,16 +60,21 @@
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                 Hola,   {{ Auth::user()->name }} <span class="caret"></span>
+                              </a>
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
+
+                                      <a href="{{ url('/users/editprofile') }}">
+                                          Editar mi perfil
+                                      </a>
+
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                            Logout
+                                            Cerrar sesión
                                         </a>
 
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -90,7 +97,14 @@
                 </div>
               @else
                   <div class="col-md-2">
-                      @include('layouts.menu')
+                      @foreach (Auth::user()->roles as $rl)
+                        @if($rl->nombre != 'Admin')
+                          @include('layouts.menurecep')
+                        @else
+                          @include('layouts.menu')
+                        @endif
+                      @endforeach
+
                   </div>
 
                     <div class="col-md-9 col-md-offset-1">

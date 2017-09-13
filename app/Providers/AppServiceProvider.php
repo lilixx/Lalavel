@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Teodolinda\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

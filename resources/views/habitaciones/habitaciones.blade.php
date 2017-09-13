@@ -15,8 +15,12 @@
 
 <h1 class="titulo habitacion"> Habitaciones </h1>
 
+@foreach (Auth::user()->roles as $rl)
+  @if($rl->nombre == 'Admin')
   <a href="habitaciones/create" class="btn btn-info">
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar</a>
+  @endif
+@endforeach   
 
 @include('habitaciones.tbl')
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Teodolinda;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +12,7 @@ class EstadiaHabitacione extends Model
 
     public function entidades()
     {
-       return $this->belongsToMany('App\Entidade')->withPivot('fechaentrada')->withTimestamps();
+       return $this->belongsToMany('Teodolinda\Entidade')->withPivot('fechaentrada')->withTimestamps();
     }
 
     public function habitacione()

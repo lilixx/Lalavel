@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Listeners;
+namespace Teodolinda\Listeners;
 
-use App\Events\Revisiondecubetafoliocargo;
+use Teodolinda\Events\Revisiondecubetafoliocargo;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\BitacoraFolioCargo;
+use Teodolinda\BitacoraFolioCargo;
 use Illuminate\Support\Facades\Auth;
 
 class CreaterevisioncubetafoliocargoEntry

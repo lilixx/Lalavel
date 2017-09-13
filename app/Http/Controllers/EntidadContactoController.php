@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\EntidadContacto;
+use Teodolinda\EntidadContacto;
 
 class EntidadContactoController extends Controller
 {

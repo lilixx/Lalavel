@@ -13,11 +13,7 @@
       {{ $n->porcentaje }}%
     </td>
     <td>
-      <a href="<?php echo  url('/');?>/descuentos/{{ $n->id }}/edit" class="btn btn-primary" title="Modificar">
-       <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-      </a>
-
-      <a href="#" class="btn btn-danger" title="Dar de baja">
+       <a href="#" class="btn btn-danger" title="Dar de baja">
       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 
     </td>

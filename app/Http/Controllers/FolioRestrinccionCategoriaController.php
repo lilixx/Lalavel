@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
 use DB;
 
-use App\FolioRestrinccionCategoria;
+use Teodolinda\FolioRestrinccionCategoria;
 
-use App\Categoria;
+use Teodolinda\Categoria;
 
 class FolioRestrinccionCategoriaController extends Controller
 {

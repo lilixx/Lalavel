@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
 use DB;
 
-use App\Entidade;
+use Teodolinda\Entidade;
 
-use App\Paise;
+use Teodolinda\Paise;
 
-use App\TipoDocumento;
+use Teodolinda\TipoDocumento;
 
-use App\MedioComunicacione;
+use Teodolinda\MedioComunicacione;
 
-use App\EntidadRole;
+use Teodolinda\EntidadRole;
 
-use App\EntidadMedioComunicacione;
+use Teodolinda\EntidadMedioComunicacione;
 
-use App\EntidadDocumento;
+use Teodolinda\EntidadDocumento;
 
-use App\EntidadContacto;
+use Teodolinda\EntidadContacto;
 
-use App\Role;
+use Teodolinda\Role;
 
 class EntidadeController extends Controller
 {

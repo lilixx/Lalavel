@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Teodolinda;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,12 +23,12 @@ class Entidade extends Model
 
     public function entidades()
     {
-       return $this->belongsToMany('App\EstadiaHabitacione', 'estadia_habitacion_entidade', 'entidade_id', 'estadiahabitacione_id');
+       return $this->belongsToMany('Teodolinda\EstadiaHabitacione', 'estadia_habitacion_entidade', 'entidade_id', 'estadiahabitacione_id');
     }
 
     public function roles()
     {
-        return $this->belongsToMany('App\Role')->withPivot('id');
+        return $this->belongsToMany('Teodolinda\Role')->withPivot('id');
     }
 
     public function entidadmediocomunicaciones()

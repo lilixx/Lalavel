@@ -23,9 +23,6 @@
     @endif
     </td>
     <td>
-      <a href="<?php echo  url('/');?>/categorias/{{ $n->id }}/edit" class="btn btn-primary" title="Modificar">
-       <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-      </a>
       <a href="#" class="btn btn-danger" title="Dar de baja">
       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
     </td>

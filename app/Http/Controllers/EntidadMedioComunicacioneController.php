@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\MedioComunicacione;
+use Teodolinda\MedioComunicacione;
 
-use App\EntidadRole;
+use Teodolinda\EntidadRole;
 
-use App\EntidadMedioComunicacione;
+use Teodolinda\EntidadMedioComunicacione;
 
 class EntidadMedioComunicacioneController extends Controller
 {

@@ -16,8 +16,12 @@
 
    <h1 class="titulo cargo"> Tasa de Cambio </h1>
 
-  <a href="tasacambios/create" class="btn btn-info">
-    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar</a>
+   @foreach (Auth::user()->roles as $rl)
+     @if($rl->nombre == 'Admin')
+      <a href="tasacambios/create" class="btn btn-info">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar</a>
+      @endif
+   @endforeach        
 
 @include('tasacambios.tbl')
 

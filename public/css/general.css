@@ -33,6 +33,11 @@ h1.titulo.cliente {
     border-bottom: 4px solid #0072B5;
 }
 
+h1.titulo.usuario {
+    color: #533019;
+    border-bottom: 4px solid #533019;
+}
+
 h1.titulo.cargo {
    color: #5cb85c;
    border-bottom: 4px solid #5cb85c;

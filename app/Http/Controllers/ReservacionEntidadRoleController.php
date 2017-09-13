@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Entidade;
+use Teodolinda\Entidade;
 
-use App\Role;
+use Teodolinda\Role;
 
-use App\ReservacionEntidadRole;
+use Teodolinda\ReservacionEntidadRole;
 
 class ReservacionEntidadRoleController extends Controller
 {

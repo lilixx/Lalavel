@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\EstadiaHabitacione;
+use Teodolinda\EstadiaHabitacione;
 
-use App\HabitacionTipo;
+use Teodolinda\HabitacionTipo;
 
-use App\Entidade;
+use Teodolinda\Entidade;
 
 use Illuminate\Support\Facades\Input;
 
-use App\Role;
+use Teodolinda\Role;
 
 use Illuminate\Support\Facades\DB;
 
@@ -170,9 +170,6 @@ class EstadiaHabitacionController extends Controller
              ->get();
 
             // dd($hablibres);
-
-
-
 
           $tipohab = HabitacionTipo::all();
 

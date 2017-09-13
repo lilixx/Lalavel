@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Listeners;
+namespace Teodolinda\Listeners;
 
-use App\Events\Event;
+use Teodolinda\Events\Event;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

@@ -6,6 +6,12 @@
 
   <ul class="animate">
 
+    <a class="m10" href="<?php echo  url('/');?>/users">
+      <li class="animate">
+        Usuarios<i class="fa fa-users float-right"></i>
+      </li>
+    </a>
+
     <a class="m9" href="<?php echo  url('/');?>/reservaciones">
       <li class="animate">
         Reservas<i class="fa fa-address-card float-right"></i>

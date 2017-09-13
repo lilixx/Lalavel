@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\SuperCategoria;
+use Teodolinda\SuperCategoria;
 
 class SuperCategoriaController extends Controller
 {
@@ -13,8 +13,9 @@ class SuperCategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+      $request->user()->authorizeRoles(['Admin']);
       $supercategoria = SuperCategoria::all();
       return view('supercategorias.supercategorias',compact('supercategoria'));
     }
@@ -24,8 +25,9 @@ class SuperCategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         return view('supercategorias.create');
     }
 
@@ -37,6 +39,7 @@ class SuperCategoriaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $supercategoria = SuperCategoria::create($request->all());
 
         if($supercategoria->save()){
@@ -63,8 +66,9 @@ class SuperCategoriaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $supercategoria = SuperCategoria::find($id);
         return view('supercategorias.edit')
         ->with(['edit' => true, 'supercategoria' => $supercategoria]);
@@ -79,6 +83,7 @@ class SuperCategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $supercategoria = SuperCategoria::find($id);
         $supercategoria->nombre = $request->nombre;
 

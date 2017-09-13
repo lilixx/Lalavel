@@ -105,6 +105,19 @@ dropdown ul a.m9 li:hover {
 	color: white;
 }
 
+dropdown ul a.m10 li {
+	border-left: 4px solid #533019;
+}
+
+dropdown ul a.m10 li .fa {
+	color: #533019;
+}
+
+dropdown ul a.m10 li:hover {
+	background: #533019;
+	color: white;
+}
+
 dropdown ul a.m1 li {
 	border-left: 4px solid #ED5548;
 }
@@ -173,7 +186,8 @@ dropdown ul a.m5 li:hover .fa,
 dropdown ul a.m6 li:hover .fa,
 dropdown ul a.m3 li:hover .fa,
 dropdown ul a.m8 li:hover .fa,
-dropdown ul a.m9 li:hover .fa  {
+dropdown ul a.m9 li:hover .fa,
+dropdown ul a.m10 li:hover .fa  {
 	color: white;
 }
 

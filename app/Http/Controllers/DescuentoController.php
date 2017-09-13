@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Descuento;
+use Teodolinda\Descuento;
 
 class DescuentoController extends Controller
 {
@@ -13,8 +13,9 @@ class DescuentoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $descuento = Descuento::all();
         return view('descuentos.descuentos',compact('descuento'));
     }
@@ -24,8 +25,9 @@ class DescuentoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         return view('descuentos.create');
     }
 
@@ -37,6 +39,8 @@ class DescuentoController extends Controller
      */
     public function store(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
+
         $descuento = Descuento::create($request->all());
 
         if($descuento->save()){
@@ -63,8 +67,9 @@ class DescuentoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $descuento = Descuento::find($id);
         return view('descuentos.edit')
         ->with(['edit' => true, 'descuento' => $descuento]);
@@ -79,14 +84,7 @@ class DescuentoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $descuento = Descuento::find($id);
-        $descuento->porcentaje = $request->porcentaje;
-
-        if($descuento->save()){
-           return redirect('descuentos')->with('msj', 'Datos guardados');
-        } else {
-           return back()->with('errormsj', 'Los datos no se guardaron');
-        }
+    
     }
 
     /**

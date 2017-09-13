@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Servicio;
+use Teodolinda\Servicio;
 
-use App\Categoria;
+use Teodolinda\Categoria;
 
 class ServicioController extends Controller
 {
@@ -15,11 +15,18 @@ class ServicioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-       $servicio = Servicio::all();
+       $request->user()->authorizeRoles(['Admin', 'Recepcionista']);
+       $servicio = Servicio::where('activo', '=', 1)->paginate(10);
 
        return view('servicios.servicios',compact('servicio'));
+    }
+
+    public function autocomplete(Request $request)
+    {
+        $data = Servicio::select("id", "nombreservicio as name")->where("nombreservicio","LIKE","%{$request->input('query')}%")->get();
+        return response()->json($data);
     }
 
     /**
@@ -27,8 +34,9 @@ class ServicioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $categoria = Categoria::all();
         return view('servicios.create',compact('categoria'));
     }
@@ -41,6 +49,7 @@ class ServicioController extends Controller
      */
     public function store(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $servicio = Servicio::create($request->all());
 
         if($servicio->save()){
@@ -67,8 +76,9 @@ class ServicioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $servicio = Servicio::find($id);
         $categoria = Categoria::all();
         return view('servicios.edit')
@@ -84,6 +94,7 @@ class ServicioController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $servicio = Servicio::find($id);
         //$servicio->nombreservicio = $request->nombreservicio;
 

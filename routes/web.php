@@ -1,12 +1,13 @@
 <?php
-use App\Categoria;
+use Teodolinda\Categoria;
 use Illuminate\Support\Facades\Input;
-use App\HabitacionTipo;
-use App\EstadiaHabitacion;
-use App\TasaCambio;
-use App\Habitacione;
-use App\ReservacionHabitacione;
-use App\Role;
+use Teodolinda\HabitacionTipo;
+use Teodolinda\EstadiaHabitacion;
+use Teodolinda\TasaCambio;
+use Teodolinda\Habitacione;
+use Teodolinda\ReservacionHabitacione;
+use Teodolinda\Role;
+use Teodolinda\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,128 +20,233 @@ use App\Role;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/search2', function(){
+  $queryString = Input::get('queryString');
+  $users = User::where('name', 'like', '%'.$queryString.'%')->get();
+  return response()->json($users);
 });
+
+Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'ServicioController@autocomplete'));
+
+Route::get('/', array('before' => 'auth', function () {
+    return view('welcome');
+}));
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+
+//User
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/users', 'UserController');
+});
+
+//Route::resource('/users', 'UserController', ['before' => 'auth']);
+Route::get('/users/{user_id}/show', 'UserController@show')->middleware('auth');
+Route::get('/users/{user_id}/edit', 'UserController@edit')->middleware('auth');
+Route::get('/users/{user_id}/editprofile', 'UserController@editprofile')->middleware('auth');
+Route::put('/users/{user_id}/updateprofile', 'UserController@updateprofile')->name('users.updateprofile');
+Route::put('/users/{user_id}/out', 'UserController@out')->name('users.out');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/useradd', 'UserController');
+});
+
 
 //Entidade
-Route::resource('/entidades', 'EntidadeController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/entidades', 'EntidadeController');
+});
 
 //Huespedes
-Route::get('/huespedes/create', 'EntidadeController@createhuesped');
-Route::resource('/huespedadd', 'EntidadeController');
-Route::get('/huespedes', 'EntidadeController@indexhuesped');
-Route::get('/huespedes/{huespede_id}/show', 'EntidadeController@showhuesped');
-Route::get('/huespedes/{huespede_id}/edit', 'EntidadeController@edithuesped');
+Route::get('/huespedes/create', 'EntidadeController@createhuesped')->middleware('auth');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/huespedadd', 'EntidadeController');
+});
+Route::get('/huespedes', 'EntidadeController@indexhuesped')->middleware('auth');
+Route::get('/huespedes/{huespede_id}/show', 'EntidadeController@showhuesped')->middleware('auth');
+Route::get('/huespedes/{huespede_id}/edit', 'EntidadeController@edithuesped')->middleware('auth');;
 
 //clientes
-Route::get('/clientes/create', 'EntidadeController@createcliente');
-Route::resource('/clienteadd', 'EntidadeController');
-Route::get('/clientes', 'EntidadeController@indexcliente');
-Route::get('/clientes/{cliente_id}/show', 'EntidadeController@showcliente');
-Route::get('/clientes/{cliente_id}/edit', 'EntidadeController@editcliente');
+Route::get('/clientes/create', 'EntidadeController@createcliente')->middleware('auth');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/clienteadd', 'EntidadeController');
+});
+Route::get('/clientes', 'EntidadeController@indexcliente')->middleware('auth');
+Route::get('/clientes/{cliente_id}/show', 'EntidadeController@showcliente')->middleware('auth');
+Route::get('/clientes/{cliente_id}/edit', 'EntidadeController@editcliente')->middleware('auth');
 
 //Clientes contacto
-Route::resource('/contactoclientes', 'EntidadContactoController');
-Route::get('/contactoclientes/{cliente_id}/create', 'EntidadContactoController@create');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/contactoclientes', 'EntidadContactoController');
+});
+Route::get('/contactoclientes/{cliente_id}/create', 'EntidadContactoController@create')->middleware('auth');
 
 //Entidad documentos
-Route::resource('/dochuespedes', 'EntidadDocumentoController');
-Route::get('/dochuespedes/{huespede_id}/create', 'EntidadDocumentoController@create');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/dochuespedes', 'EntidadContactoController');
+});
+Route::get('/dochuespedes/{huespede_id}/create', 'EntidadDocumentoController@create')->middleware('auth');
 
 // Entidad medio comunicaciones
-Route::resource('/mediocomunicaciones', 'EntidadMedioComunicacioneController');
-Route::get('/mediocomunicaciones/{entidad_id}/create', 'EntidadMedioComunicacioneController@create');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/mediocomunicaciones', 'EntidadMedioComunicacioneController');
+});
+Route::get('/mediocomunicaciones/{entidad_id}/create', 'EntidadMedioComunicacioneController@create')->middleware('auth');
 
 //Paises
-Route::resource('/paises', 'PaiseController');
-Route::resource('/paiseadd', 'PaiseController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/paises', 'PaiseController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/paiseadd', 'PaiseController');
+});
+
 
 //Super Categorias
-Route::resource('/supercategorias', 'SuperCategoriaController');
-Route::resource('/scategoriaadd', 'SuperCategoriaController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/supercategorias', 'SuperCategoriaController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/scategoriaadd', 'SuperCategoriaController');
+});
+
 
 //Categorias
-Route::resource('/categorias', 'CategoriaController');
-Route::resource('/categoriaadd', 'CategoriaController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/categorias', 'CategoriaController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/categoriaadd', 'CategoriaController');
+});
+
 
 //Servicios
-Route::resource('/servicios', 'ServicioController');
-Route::resource('/servicioadd', 'ServicioController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/servicios', 'ServicioController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/servicioadd', 'ServicioController');
+});
+
 
 //Habitacion Tipo
-Route::resource('/habitaciontipos', 'HabitacionTipoController');
-Route::resource('/habtipoadd', 'HabitacionTipoController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/habitaciontipos', 'HabitacionTipoController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/habtipoadd', 'HabitacionTipoController');
+});
+
 
 //Habitaciones
-Route::resource('/habitaciones', 'HabitacioneController');
-Route::resource('/habitacionadd', 'HabitacioneController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/habitaciones', 'HabitacioneController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/habitacionadd', 'HabitacioneController');
+});
+
 
 //folios
-Route::resource('/folios', 'FolioController');
-Route::resource('/folioadd', 'FolioController');
-Route::get('/folios/{folio_id}/show', 'FolioController@show');
-Route::get('/folios/{folio_id}/showstatus', 'FolioController@showstatus');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/folios', 'FolioController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/folioadd', 'FolioController');
+});
+Route::get('/folios/{folio_id}/show', 'FolioController@show')->middleware('auth');
+Route::get('/folios/{folio_id}/showstatus', 'FolioController@showstatus')->middleware('auth');
 Route::put('/folios/{folio_id}/invoicepdf', 'FolioController@invoicepdf')->name('folios.invoicepdf');
-Route::get('/folios/{folio_id}/showinvoice', 'FolioController@showinvoice');
-Route::get('/folios/{folio_id}/checkout', 'FolioController@checkout');
+Route::get('/folios/{folio_id}/showinvoice', 'FolioController@showinvoice')->middleware('auth');
+Route::get('/folios/{folio_id}/checkout', 'FolioController@checkout')->middleware('auth');
 Route::put('/folios/{folio_id}/out', 'FolioController@out')->name('folios.out');
 Route::put('/folios/{folio_id}/baja', 'FolioController@baja')->name('folios.baja');
-Route::get('/folios/{folio_id}/createchild', 'FolioController@createchild');
+Route::get('/folios/{folio_id}/createchild', 'FolioController@createchild')->middleware('auth');
 
 //Folio Restrinccion Categoria
-Route::resource('/restrinccioncat', 'FolioRestrinccionCategoriaController');
-Route::get('/restrinccioncat/{folio_id}/create', 'FolioRestrinccionCategoriaController@create');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/restrinccioncat', 'FolioRestrinccionCategoriaController');
+});
+Route::get('/restrinccioncat/{folio_id}/create', 'FolioRestrinccionCategoriaController@create')->middleware('auth');
 
 //Folio Cargos
-Route::resource('/foliocargos', 'FolioCargoController');
-Route::get('/foliocargos/{folio_id}/create', 'FolioCargoController@create');
-Route::get('/foliocargos/{folio_id}/move', 'FolioCargoController@move');
-Route::get('/foliocargos/{folio_id}/cubeta', 'FolioCargoController@cubeta');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/foliocargos', 'FolioCargoController');
+});
+Route::get('/foliocargos/{folio_id}/create', 'FolioCargoController@create')->middleware('auth');
+Route::get('/foliocargos/{folio_id}/move', 'FolioCargoController@move')->middleware('auth');
+Route::get('/foliocargos/{folio_id}/cubeta', 'FolioCargoController@cubeta')->middleware('auth');
 
 //Descuentos
-Route::resource('/descuentos', 'DescuentoController');
-Route::resource('/descuentoadd', 'DescuentoController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/descuentos', 'DescuentoController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/descuentoadd', 'DescuentoController');
+});
 
 //Estadias
-Route::resource('/estadias', 'EstadiaController');
-Route::resource('/estadiaadd', 'EstadiaController');
-Route::get('/estadias/{estadia_id}/show', 'EstadiaController@show');
-Route::get('film/{id}', 'EstadiaController@GetFilmBYid');
-Route::resource('/estadiahab', 'EstadiaHabitacionController');
-Route::get('/estadiahab/{reservahab_id}/edit', 'EstadiaHabitacionController@edit');
-Route::resource('/estadiaentidad', 'EstadiaHabitacionController');
-Route::get('/estadiaentidad/{estadiahabitacion}/createhuesped', 'EstadiaHabitacionController@createhuesped');
-Route::resource('/estadiaentidadadd', 'EstadiaHabitacionController');
-Route::get('/estadiahab/{id}/move/', 'EstadiaHabitacionController@move');
-
-Route::get('/estadias/{estadia_id}/createadicional', 'EstadiaController@createadicional');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/estadias', 'EstadiaController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/estadiaadd', 'EstadiaController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/estadiahab', 'EstadiaHabitacionController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/estadiaentidad', 'EstadiaHabitacionController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/estadiaentidadadd', 'EstadiaHabitacionController');
+});
+Route::get('/estadias/{estadia_id}/show', 'EstadiaController@show')->middleware('auth');
+Route::get('film/{id}', 'EstadiaController@GetFilmBYid')->middleware('auth');
+Route::get('/estadiahab/{reservahab_id}/edit', 'EstadiaHabitacionController@edit')->middleware('auth');
+Route::get('/estadiaentidad/{estadiahabitacion}/createhuesped', 'EstadiaHabitacionController@createhuesped')->middleware('auth');
+Route::get('/estadiahab/{id}/move/', 'EstadiaHabitacionController@move')->middleware('auth');
+Route::get('/estadias/{estadia_id}/createadicional', 'EstadiaController@createadicional')->middleware('auth');
 
 //Tarifas
-Route::resource('/tarifas', 'TarifaController');
-Route::resource('/tarifaadd', 'TarifaController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/tarifas', 'TarifaController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/tarifaadd', 'TarifaController');
+});
+
 
 //Tasa de TasaCambio
-Route::resource('/tasacambios', 'TasaCambioController');
-Route::resource('/tasacambioadd', 'TasaCambioController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/tasacambios', 'TasaCambioController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/tasacambioadd', 'TasaCambioController');
+});
 
 //Reservaciones
-Route::resource('/reservaciones', 'ReservacioneController');
-Route::get('/reservaciones/{reserva_id}/show', 'ReservacioneController@show');
-Route::get('/reservaciones/{reserva_id}/estadia', 'ReservacioneController@movestay');
-Route::resource('/reservacionesadd', 'ReservacioneController');
-Route::resource('/reservahab', 'ReservacionHabitacioneController');
-Route::resource('/reservaentidad', 'ReservacionEntidadRoleController');
-Route::get('/reservaentidad/{reservahabitacion}/createhuesped', 'ReservacionEntidadRoleController@createhuesped');
-Route::resource('/reservaentidadadd', 'ReservacionEntidadRoleController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/reservaciones', 'ReservacioneController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/reservacionesadd', 'ReservacioneController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/reservahab', 'ReservacionHabitacioneController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/reservaentidad', 'ReservacionEntidadRoleController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/reservaentidadadd', 'ReservacionEntidadRoleController');
+});
+Route::get('/reservaciones/{reserva_id}/show', 'ReservacioneController@show')->middleware('auth');
+Route::get('/reservaciones/{reserva_id}/estadia', 'ReservacioneController@movestay')->middleware('auth');
+Route::get('/reservaentidad/{reservahabitacion}/createhuesped', 'ReservacionEntidadRoleController@createhuesped')->middleware('auth');
+Route::get('/reservahab/{reservahab_id}/edit', 'ReservacionHabitacioneController@edit')->middleware('auth');
 
-Route::get('/reservahab/{reservahab_id}/edit', 'ReservacionHabitacioneController@edit');
-
-Route::get('/reservaciones/create', function(){
+/*Route::get('/reservaciones/create', function(){
     $tipohab = HabitacionTipo::all();
 
     $fechaentrada = Input::has('fechaentrada') ? Input::get('fechaentrada') : null;
@@ -188,7 +294,7 @@ Route::get('/reservaciones/create', function(){
 
 
     return View::make('/reservaciones/create', compact(['hablibres'], 'tipohab', 'valth', 'tarifa', 'rol'));
-});
+});  */
 
 //Habitación adicional a la Reserva
 

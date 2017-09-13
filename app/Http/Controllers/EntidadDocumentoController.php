@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\EntidadDocumento;
+use Teodolinda\EntidadDocumento;
 
-use App\TipoDocumento;
+use Teodolinda\TipoDocumento;
 
 class EntidadDocumentoController extends Controller
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
 
 use DB;
 
-use App\Categoria;
+use Teodolinda\Categoria;
 
-use App\SuperCategoria;
+use Teodolinda\SuperCategoria;
 
 use Illuminate\Support\Facades\Input;
 
@@ -20,8 +20,9 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+         $request->user()->authorizeRoles(['Admin']);
          $categoria = DB::table('categorias')
          ->join('super_categorias', 'super_categorias.id', '=', 'categorias.supercategoria_id', 'left outer')
          ->select('categorias.*', 'super_categorias.nombre as nombresuper')->get();
@@ -34,8 +35,9 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+         $request->user()->authorizeRoles(['Admin']);
         $supercategoria = SuperCategoria::all();
         return view('categorias.create',compact('supercategoria'));
     }
@@ -48,6 +50,7 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $categoria = Categoria::create($request->all());
 
         if($categoria->save()){
@@ -74,8 +77,9 @@ class CategoriaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $categoria = Categoria::find($id);
         $supercategoria = SuperCategoria::all();
         return view('categorias.edit')
@@ -91,6 +95,7 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $categoria = Categoria::find($id);
 
         if($categoria->update($request->all())){

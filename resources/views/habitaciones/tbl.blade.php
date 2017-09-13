@@ -19,11 +19,15 @@
 
     <td>
 
-       <a href="habitaciones/{{ $n->id }}/edit" class="btn btn-primary" title="Editar">
-      <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+      @foreach (Auth::user()->roles as $rl)
+        @if($rl->nombre == 'Admin')
+         <a href="habitaciones/{{ $n->id }}/edit" class="btn btn-primary" title="Editar">
+          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
 
-      <a href="#" class="btn btn-danger" title="Dar de baja">
-      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+          <a href="#" class="btn btn-danger" title="Dar de baja">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+        @endif
+      @endforeach    
 
     </td>
   </tr>

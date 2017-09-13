@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Teodolinda\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Folio;
+use Teodolinda\Folio;
 
-use App\Servicio;
+use Teodolinda\Servicio;
 
-use App\FolioCargo;
+use Teodolinda\FolioCargo;
 
-use App\BitacoraFolioCargo;
+use Teodolinda\BitacoraFolioCargo;
 
-use App\Descuento;
+use Teodolinda\Descuento;
 
 use Illuminate\Support\Facades\Auth;
 
 use DB;
 
-use App\Events\Enviocubetafoliocargo;
+use Teodolinda\Events\Enviocubetafoliocargo;
 
-use App\Events\Creaciondefoliocargo;
+use Teodolinda\Events\Creaciondefoliocargo;
 
-use App\Events\Cambiodefoliocargo;
+use Teodolinda\Events\Cambiodefoliocargo;
 
-use App\Events\Revisiondecubetafoliocargo;
+use Teodolinda\Events\Revisiondecubetafoliocargo;
 
 use Illuminate\Support\Facades\Event;
 
@@ -35,8 +35,9 @@ class FolioCargoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $foliocargo = FolioCargo::where('cubeta', 1)->where('activo', 1)->get();
         return view('foliocargos.foliocargos',compact('foliocargo'));
     }
@@ -89,7 +90,7 @@ class FolioCargoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {     dd($request->all());
           $idfolio= $request->folio_id;
           $now = \Carbon\Carbon::now();
           foreach($request->servicio_id as $key=> $v) //recorre todos los email
@@ -101,7 +102,7 @@ class FolioCargoController extends Controller
                            'descuento_id'=>$request->descuento_id[$key],
                            'created_at' => $now,
                            'updated_at' => $now,
-                  
+
                          ];
           }
 
@@ -172,8 +173,9 @@ class FolioCargoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function cubeta($id)
+    public function cubeta(Request $request, $id)
     {
+        $request->user()->authorizeRoles(['Admin']);
         $foliocargo = Foliocargo::find($id);
         return view('foliocargos.cubeta')
         ->with(['edit' => true, 'foliocargo' => $foliocargo]);
