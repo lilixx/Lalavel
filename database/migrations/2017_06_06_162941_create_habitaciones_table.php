@@ -17,7 +17,10 @@ class CreateHabitacionesTable extends Migration
             $table->increments('id');
             $table->integer('habitacion_tipo_id')->unsigned();
             $table->foreign('habitacion_tipo_id')->references('id')->on('habitacion_tipos');
+            $table->integer('habitacion_area_id')->unsigned();
+            $table->foreign('habitacion_area_id')->references('id')->on('habitacion_areas');
             $table->integer('numero');
+            $table->longText('comentario')->nullable();
             $table->boolean('limpia')->default(1);
             $table->boolean('disponible')->default(1);
             $table->boolean('activo')->default(1);

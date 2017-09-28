@@ -17,7 +17,7 @@ class CreateReservacionesTable extends Migration
             $table->increments('id');
             $table->smallInteger('reservacionprocedencia_id')->unsigned();
             $table->foreign('reservacionprocedencia_id')->references('id')->on('reservacion_procedencias');
-            $table->integer('entidadtarjeta_id')->unsigned();
+            $table->integer('entidadtarjeta_id')->nullable()->unsigned();
             $table->foreign('entidadtarjeta_id')->references('id')->on('entidad_tarjetas');
             $table->boolean('confirmada')->default(1);;
             $table->boolean('activo')->default(1);

@@ -17,6 +17,8 @@ class CreateTarifasTable extends Migration
             $table->increments('id');
             $table->integer('habitaciontipo_id')->nullable()->unsigned();
             $table->foreign('habitaciontipo_id')->references('id')->on('habitacion_tipos');
+            $table->integer('servicio_id')->nullable()->unsigned();
+            $table->foreign('servicio_id')->references('id')->on('servicios');
             $table->string('nombre', 60);
             $table->float('valor');
             $table->boolean('activo')->default(1);

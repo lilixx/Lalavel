@@ -43,7 +43,10 @@
        </li>
      </a>
      <ul><a class="m3" href="<?php echo  url('/');?>/habitaciontipos">
-        <li class="subm"><i class="fa fa-bath float-right"></i>Tipo</li></a>
+        <li class="subm"><i class="fa fa-bath float-right"></i>Tipos</li></a>
+     </ul>
+     <ul><a class="m3" href="<?php echo  url('/');?>/habitacionareas">
+        <li class="subm"><i class="fa fa-arrows float-right"></i>Areas</li></a>
      </ul>
      <ul><a class="m3" href="<?php echo  url('/');?>/tarifas">
         <li class="subm"><i class="fa fa-usd float-right"></i>Tarifa</li></a>

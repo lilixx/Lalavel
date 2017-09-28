@@ -15,6 +15,11 @@ class ReservacionHabitacione extends Model
       return $this->belongsTo(Habitacione::class);
     }
 
+    public function reservacione()
+    {
+      return $this->belongsTo(Reservacione::class);
+    }
+
     public function tarifa()
     {
       return $this->belongsTo(Tarifa::class);

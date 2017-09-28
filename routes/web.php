@@ -137,6 +137,14 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('/habtipoadd', 'HabitacionTipoController');
 });
 
+//Habitacion Area
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/habitacionareas', 'HabitacionAreaController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/habareaadd', 'HabitacionAreaController');
+});
+
 
 //Habitaciones
 Route::group(['middleware' => 'auth'], function() {
@@ -145,6 +153,8 @@ Route::group(['middleware' => 'auth'], function() {
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('/habitacionadd', 'HabitacioneController');
 });
+Route::get('/habitaciones/month', 'HabitacioneController@habmonth')->middleware('auth');
+
 
 
 //folios

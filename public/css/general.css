@@ -124,3 +124,21 @@ form.form-horizontal.baja {
     float: right;
     margin-left: 0.5em;
 }
+
+tr td input.form-control.ui-autocomplete-input {
+    width: 20%;
+    float: left;
+    margin-bottom: 1em;
+    margin-right: 1em;
+}
+
+tr td select#descuento_id {
+    width: 20%;
+    float: left;
+    margin-right: 1em;
+
+}
+
+table#maintable {
+    width: 100%;
+}

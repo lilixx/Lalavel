@@ -90,13 +90,18 @@ class FolioCargoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {     dd($request->all());
+    {    // dd($request->all());
+          //dd($request->cargo);
+          foreach($request->cargo as $cr){
+            $servicio_id[] = filter_var($cr, FILTER_SANITIZE_NUMBER_INT);
+          }
+
           $idfolio= $request->folio_id;
           $now = \Carbon\Carbon::now();
-          foreach($request->servicio_id as $key=> $v) //recorre todos los email
+          foreach($request->cantidad as $key=> $v) //recorre todos los email
           {
               $containers[] =  [
-                           'servicio_id'=>$request->servicio_id[$key],
+                           'servicio_id'=>$servicio_id[$key],
                            'folio_id'=>$idfolio,
                            'cantidad' =>$request->cantidad[$key],
                            'descuento_id'=>$request->descuento_id[$key],

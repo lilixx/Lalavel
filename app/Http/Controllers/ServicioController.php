@@ -25,7 +25,7 @@ class ServicioController extends Controller
 
     public function autocomplete(Request $request)
     {
-        $data = Servicio::select("id", "nombreservicio as name")->where("nombreservicio","LIKE","%{$request->input('query')}%")->get();
+        $data = Servicio::select("id", "nombreservicio as name")->where("nombreservicio","LIKE","%{$request->input('term')}%")->get();
         return response()->json($data);
     }
 
