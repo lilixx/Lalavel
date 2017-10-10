@@ -89,14 +89,14 @@
             </div>
         </nav>
 
-        <div class="container">
+        <div class="container" style="">
             <div class="row">
               @if (Auth::guest())
                 <div class="col-md-12">
                    @yield('content')
                 </div>
               @else
-                    <div class="col-md-12 col-md-offset-1">
+                    <div class="col-md-12">
                        @yield('content')
                     </div>
               @endif

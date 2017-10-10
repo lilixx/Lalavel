@@ -40,7 +40,7 @@ class EstadiaController extends Controller
     public function index()
     {
         $estadia = Estadia::where('activo', 1)->get();
-        return view('estadias.estadias',compact('estadia')); 
+        return view('estadias.estadias',compact('estadia'));
     }
 
     /**
@@ -68,11 +68,65 @@ class EstadiaController extends Controller
 
     }
 
-    public function GetFilmBYid($id){
-       //$tipohab = HabitacionTipo::find($id);
-      //  dd($tipohab->habitaciones);
-        //return HabitacionTipo::where('id', $id)->with('habitacione')->get();
-      return HabitacionTipo::where('id', $id)->with('habitacione')->with('tarifa')->get();
+    public function GetFilmBYid($id, $date){
+
+      //dd($date);
+      $fechaentrada = date('Y-m-d');
+      $fechasalida = $date;
+      $tipohab = $id;
+
+      $habitacione = DB::table('habitaciones')
+        ->where('habitaciones.habitacion_tipo_id', '=', $tipohab)
+        ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
+        ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
+        ->whereNotIn('habitaciones.id', function($query) use ($fechaentrada, $fechasalida)
+             {
+                $query->from('estadia_habitaciones')
+                ->where('estadia_habitaciones.activo', '=', 1)
+                ->Where(function($query) use ($fechasalida, $fechaentrada)
+                {
+                          $query->where('estadia_habitaciones.fechaentrada', '<=', $fechaentrada)
+                          ->where('estadia_habitaciones.fechasalida', '>', $fechaentrada);
+                 })
+               ->orWhere(function($query) use ($fechasalida, $fechaentrada)
+                 {
+                         $query->Where('estadia_habitaciones.fechaentrada', '<', $fechasalida )
+                         ->where('estadia_habitaciones.fechaentrada', '>', $fechaentrada );
+
+                   })
+                ->select('estadia_habitaciones.habitacione_id');
+             })
+        ->whereNotIn('habitaciones.id', function($query) use ($fechaentrada, $fechasalida)
+            {
+                $query->from('reservacion_habitaciones')
+                 ->where('reservacion_habitaciones.activo', '=', 1)
+                 ->Where(function($query) use ($fechasalida, $fechaentrada)
+                 {
+                           $query->where('reservacion_habitaciones.fechaentrada', '<=', $fechaentrada)
+                           ->where('reservacion_habitaciones.fechasalida', '>', $fechaentrada);
+                  })
+                ->orWhere(function($query) use ($fechasalida, $fechaentrada)
+                  {
+                          $query->Where('reservacion_habitaciones.fechaentrada', '<', $fechasalida )
+                          ->where('reservacion_habitaciones.fechaentrada', '>', $fechaentrada );
+
+                    })
+                ->select('reservacion_habitaciones.habitacione_id');
+            })
+
+       ->get();
+
+       $tarifa = DB::table('tarifas')
+         ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'tarifas.habitaciontipo_id')
+         ->where('habitacion_tipos.id', '=', $tipohab)
+         ->select('tarifas.id', 'tarifas.valor', 'tarifas.nombre')->get();
+
+        return compact(['habitacione', 'tarifa']);
+
+      //  return HabitacionTipo::habitacione($fechaentrada, $fechasalida)->get();
+
+
+      //return HabitacionTipo::with('habitacione')->with('tarifa')->get();
     }
 
     /**

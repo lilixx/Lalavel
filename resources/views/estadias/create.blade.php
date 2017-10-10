@@ -40,7 +40,7 @@
   <input id="step_1" type="radio" name="steps" checked="checked"/>
   <label class="step" for="step_1" data-title="Habitación y precio"><span>1</span></label>
   <input id="step_2" type="radio" name="steps"/>
-  <label class="step" for="step_2" data-title="Folio y Huéspedes"><span>2</span></label>
+  <label class="step" for="step_2" data-title="Huéspedes"><span>2</span></label>
 
   <div class="content">
 
@@ -67,21 +67,6 @@
                      </div>
                   </div>
 
-                  <div class="col-lg-12">
-                    <div class="form-group">
-                      <label for="titulo" class="col-sm-2 control-label">Fecha de Salida</label>
-                        <div class="col-sm-8">
-                          <div class="input-group">
-                              <input type="text" class="form-control datepicker" name="fechasalida" track-by="salida"
-                              v-model="film2" v-on:change="GetActors()"  v-bind:disabled="disableWhenSelect">
-                              <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
-
                  <div class="col-lg-6">
                     <label for="titulo" class="col-sm-4 control-label">Número</label>
                       <div class="col-sm-8">
@@ -93,6 +78,19 @@
                   </div>
 
 
+                  <div class="col-lg-12">
+                    <div class="form-group">
+                      <label for="titulo" class="col-sm-2 control-label">Fecha de Salida</label>
+                        <div class="col-sm-8">
+                          <div class="input-group">
+                              <input type="text" class="form-control datepicker" name="fechasalida">
+                              <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
 
 
                   <div class="col-lg-12">
@@ -134,96 +132,13 @@
          <div id="app">
         <div class="col-lg-12">
 
-      <!--- Folio --------------------------------------------------------------------->
-        <h3 class="titulo">Folio</h3>
-
-          <div class="form-group">
-            <label for="titulo" class="col-sm-2 control-label">Folio de</label>
-              <div class="col-sm-7">
-                  <select v-model="vue.exp" class="form-control input-sm">
-                    <option value="1" v-bind:value="true">Cliente</option>
-                    <option value="2" v-bind:value="false">Huésped</option>
-                  </select>
-              </div>
-          </div>
-
-           <input type="hidden" name="reservacione_id" value="">
-
-
-          <!--  true  -->
-          <div v-if="vue.exp==true" class="form-group">
-
-          <div class="col-lg-12">
-            <div class="form-group">
-              <label for="titulo" class="col-sm-2 control-label">Cliente</label>
-              <div class="col-sm-9">
-                <select  class="form-control input-sm" name="entidadrole_id">
-                 <option value="0" selected="true" disabled="true">Seleccione un cliente</option>
-                   @endverbatim
-                    @foreach ($rol->entidades as $cl)
-                      <option value="{{$cl->pivot->id}}">{{$cl->nombres}} {{$cl->apellidos}}</option>
-                    @endforeach
-                   @verbatim
-                </select>
-              </div>
-            </div>
-          </div>
-
-
-
-           </div>
-
-
-
-
-          <!--  end true -->
-
-           <div v-if="vue.exp == false" class="form-group">
-
-             <div class="col-lg-5">
-               <div class="form-group">
-                <label for="titulo" class="col-sm-4 control-label">Nombres</label>
-                  <div class="col-sm-8">
-                      <input  type="text" class="form-control" name="nombres[]"  placeholder="Ingrese los nombres">
-                    </div>
-                  </div>
-               </div>
-
-               <div class="col-lg-6">
-                  <label for="titulo" class="col-sm-4 control-label">Apellidos</label>
-                    <div class="col-sm-8">
-                       <input type="text" class="form-control" name="apellidos[]"  placeholder="Ingrese los apellidos">
-                    </div>
-                </div>
-
-
-
-          </div> <!--end false -->
-
-          </div>
-
-          <!-- end vue -->
-
-          <div class="col-lg-6">
-            <div class="form-group">
-              <label for="titulo" class="col-sm-3 control-label">Crédito</label>
-              <div class="col-sm-8">
-                <select  class="form-control input-sm" name="credito">
-                    <option value="0">No</option>
-                    <option value="1">Si</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-
 
   <!--HUespedes-------------------------------------------------------------------------->
 
         <div class="col-lg-12">
 
-        <div v-if="vue.exp==false"><h3 class="titulo">Huéspedes Adicionales</h3></div>
-        <div v-if="vue.exp==true"><h3 class="titulo">Huéspedes</h3>
+
+         <h3 class="titulo">Huéspedes</h3>
 
           <div class="col-lg-5">
             <div class="form-group">
@@ -332,7 +247,6 @@ new Vue({
      },
      disableWhenSelect:false,
      film: [],
-     film2: [],
      habitacione: [],
      tarifa: [],
      actorsShow:true,
@@ -353,9 +267,9 @@ new Vue({
      Vue.delete(this.docs, index);
    },
     GetActors: function() {
-      if(this.film !== '' && this.film2 !== ''){
+      if(this.film !== ''){
         this.disableWhenSelect = false;
-        this.getAllactorFormDataBse(this.film, this.film2);
+        this.getAllactorFormDataBse(this.film);
         this.actorsShow = true;
         this.actorsShow2 = true;
         this.disableWhenSelect = false;
@@ -365,8 +279,8 @@ new Vue({
         alert('Please select Film')
       }
     },
-    getAllactorFormDataBse:function(id, salida, index){
-      this.$http.get('/film/'+ id + salida).then(function(response){
+    getAllactorFormDataBse:function(id, index){
+      this.$http.get('/film/'+ id).then(function(response){
         //done
         //back with data
         //back with out data

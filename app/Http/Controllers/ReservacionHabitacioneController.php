@@ -78,26 +78,30 @@ class ReservacionHabitacioneController extends Controller
           $valth = $tipohab;
 
 
-            $hablibres = DB::table('habitaciones')
-              ->where('habitaciones.habitacion_tipo_id', '=', $valth)
-              ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
-              ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
-              ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
-                   {
-                      $query->from('estadia_habitaciones')
-                      ->where('estadia_habitaciones.fechasalida', '>=', $fechasalida)
-                      ->orWhere('estadia_habitaciones.fechasalida', '>', $fechaentrada)
-                      ->select('estadia_habitaciones.habitacione_id');
-                   })
-              ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
-                  {
-                      $query->from('reservacion_habitaciones')
-                      ->where('reservacion_habitaciones.fechasalida', '>=', $fechasalida)
-                      ->orWhere('reservacion_habitaciones.fechasalida', '>', $fechaentrada)
-                      ->select('reservacion_habitaciones.habitacione_id');
-                  })
+          $hablibres = DB::table('habitaciones')
+            ->where('habitaciones.habitacion_tipo_id', '=', $valth)
+            ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
+            ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
+            ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
+                 {
+                    $query->from('estadia_habitaciones')
+                    ->where('estadia_habitaciones.fechasalida', '>=', $fechasalida)
+                    ->orWhere('estadia_habitaciones.fechasalida', '>', $fechaentrada)
+                    ->select('estadia_habitaciones.habitacione_id');
+                 })
+            ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
+                {
+                    $query->from('reservacion_habitaciones')
+                     ->where('reservacion_habitaciones.activo', '=', 1)
+                     ->Where(function($query) use ($fechasalida, $fechaentrada)
+                     {
+                       $query->where('reservacion_habitaciones.fechasalida', '>=', $fechasalida)
+                              ->orWhere('reservacion_habitaciones.fechasalida', '>', $fechaentrada);
+                     })
+                    ->select('reservacion_habitaciones.habitacione_id');
+                })
 
-             ->get();
+           ->get();
 
 
           $tipohab = HabitacionTipo::all();

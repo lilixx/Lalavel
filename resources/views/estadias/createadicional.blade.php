@@ -4,11 +4,14 @@
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
 
 <!-- Jquery -->
-<script src="{{asset('js/jquery-1.11.3.min.js')}}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.8.14/themes/smoothness/jquery-ui.css">
+
 <!-- Datepicker Files -->
 <link rel="stylesheet" href="{{asset('datepicker/css/bootstrap-datepicker3.css')}}">
 <link rel="stylesheet" href="{{asset('datepicker/css/bootstrap-datepicker.standalone.css')}}">
-<script src="{{asset('datepicker/js/bootstrap-datepicker.js')}}"></script>
+
 <!-- Languaje -->
 <script src="{{asset('datepicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
 
@@ -68,6 +71,22 @@
                      </div>
                   </div>
 
+
+                  <div class="col-lg-12">
+                    <div class="form-group">
+                      <label for="titulo" class="col-sm-2 control-label">Fecha de Salida</label>
+                        <div class="col-sm-8">
+                          <div class="input-group">
+                              <input id="dateofchange" type="text" track-by="date"  class="form-control" v-model="film2"
+                               v-on:change="GetActors()" v-bind:disabled="disableWhenSelect" class="form-control datepicker" name="fechasalida">
+                              <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
                  <div class="col-lg-6">
                     <label for="titulo" class="col-sm-4 control-label">Número</label>
                       <div class="col-sm-8">
@@ -79,19 +98,7 @@
                   </div>
 
 
-                  <div class="col-lg-12">
-                    <div class="form-group">
-                      <label for="titulo" class="col-sm-2 control-label">Fecha de Salida</label>
-                        <div class="col-sm-8">
-                          <div class="input-group">
-                              <input type="text" class="form-control datepicker" name="fechasalida">
-                              <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
+
 
 
                   <div class="col-lg-12">
@@ -229,13 +236,26 @@
 </body>
 
 <script type="text/javascript">
-require('fullcalendar')
-  export default {
-      mounted() {
-          $('#calendar').fullCalendar()
-      }
-  }
+function addDays(date) {
+    var d = new Date(date);
+    d.setDate(d.getDate() + 1);
+    return d;
+}
+function addYear(date){
+    var d = new Date(date);
+    d.setFullYear(d.getFullYear() + 2);
+    return d;
+}
+
+$('#dateofchange').datepicker({
+    showButtonPanel: true,
+    dateFormat: 'yy-mm-dd',
+    minDate: new Date(),
+
+});
+
 </script>
+
 
 
 <script type="text/javascript">
@@ -248,6 +268,7 @@ new Vue({
      },
      disableWhenSelect:false,
      film: [],
+     film2: [],
      habitacione: [],
      tarifa: [],
      actorsShow:true,
@@ -268,38 +289,33 @@ new Vue({
      Vue.delete(this.docs, index);
    },
     GetActors: function() {
-      if(this.film !== ''){
+      if(this.film != '' && this.film2 != ''){
         this.disableWhenSelect = false;
-        this.getAllactorFormDataBse(this.film);
+        //this.getAllactorFormDataBse(this.film);
+        this.getAllactorFormDataBse(this.film, this.film2);
         this.actorsShow = true;
         this.actorsShow2 = true;
         this.disableWhenSelect = false;
 
-      }else{
-        this.actorsShow = false;
-        alert('Please select Film')
       }
     },
-    getAllactorFormDataBse:function(id, index){
-      this.$http.get('/film/'+ id).then(function(response){
+    getAllactorFormDataBse:function(id, date, index){
+      this.$http.get('/film/'+ id + '/' + date).then((response)=>{
         //done
         //back with data
         //back with out data
-        if(response.body[0].habitacione.length > 0){
-           this.actors = response.body[0].habitacione;
+        if(response.body.habitacione.length > 0){
+           this.actors = response.body.habitacione;
         }else{
           this.actorsShow = false;
         }
 
-        if(response.body[0].tarifa.length > 0){
-           this.actors2 = response.body[0].tarifa;
+        if(response.body.tarifa.length > 0){
+           this.actors2 = response.body.tarifa;
         }
 
       },
-       function(){
-        //error
-        alert('unknow error call the developer')
-      });
+      );
     }
   }
 });

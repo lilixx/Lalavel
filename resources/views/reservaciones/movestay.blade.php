@@ -46,7 +46,7 @@
 
       <div class="content_1">
 
-        @foreach($reserva->reservacionhabitaciones as $rh)
+        @foreach($reserva as $rh)
 
            <div class="col-lg-12">
 

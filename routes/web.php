@@ -213,6 +213,7 @@ Route::group(['middleware' => 'auth'], function() {
 });
 Route::get('/estadias/{estadia_id}/show', 'EstadiaController@show')->middleware('auth');
 Route::get('film/{id}', 'EstadiaController@GetFilmBYid')->middleware('auth');
+Route::get('film/{id}/{date}', 'EstadiaController@GetFilmBYid')->middleware('auth');
 Route::get('/estadiahab/{reservahab_id}/edit', 'EstadiaHabitacionController@edit')->middleware('auth');
 Route::get('/estadiaentidad/{estadiahabitacion}/createhuesped', 'EstadiaHabitacionController@createhuesped')->middleware('auth');
 Route::get('/estadiahab/{id}/move/', 'EstadiaHabitacionController@move')->middleware('auth');
@@ -251,111 +252,10 @@ Route::group(['middleware' => 'auth'], function() {
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('/reservaentidadadd', 'ReservacionEntidadRoleController');
 });
+Route::put('/reservaciones{reserva_id}/baja', 'ReservacioneController@baja')->name('reservaciones.baja');
+Route::put('/reservaciones{reserva_id}/noshow', 'ReservacioneController@noshow')->name('reservaciones.noshow');
 Route::get('/reservaciones/{reserva_id}/show', 'ReservacioneController@show')->middleware('auth');
 Route::get('/reservaciones/{reserva_id}/estadia', 'ReservacioneController@movestay')->middleware('auth');
 Route::get('/reservaentidad/{reservahabitacion}/createhuesped', 'ReservacionEntidadRoleController@createhuesped')->middleware('auth');
 Route::get('/reservahab/{reservahab_id}/edit', 'ReservacionHabitacioneController@edit')->middleware('auth');
-
-/*Route::get('/reservaciones/create', function(){
-    $tipohab = HabitacionTipo::all();
-
-    $fechaentrada = Input::has('fechaentrada') ? Input::get('fechaentrada') : null;
-    $fechasalida = Input::has('fechasalida') ? Input::get('fechasalida') : null;
-    $tipohab = Input::has('tipohab') ? Input::get('tipohab') : null;
-    $rol = Role::find(2);
-
-    if($fechasalida != null) {
-        $valth = $tipohab;
-
-
-          $hablibres = DB::table('habitaciones')
-            ->where('habitaciones.habitacion_tipo_id', '=', $valth)
-            ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
-            ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
-            ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
-                 {
-                    $query->from('estadia_habitaciones')
-                    ->where('estadia_habitaciones.fechasalida', '>=', $fechasalida)
-                    ->orWhere('estadia_habitaciones.fechasalida', '>', $fechaentrada)
-                    ->select('estadia_habitaciones.habitacione_id');
-                 })
-            ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
-                {
-                    $query->from('reservacion_habitaciones')
-                    ->where('reservacion_habitaciones.fechasalida', '>=', $fechasalida)
-                    ->orWhere('reservacion_habitaciones.fechasalida', '>', $fechaentrada)
-                    ->select('reservacion_habitaciones.habitacione_id');
-                })
-
-           ->get();
-
-
-        $tipohab = HabitacionTipo::all();
-
-        $tarifa = DB::table('tarifas')
-          ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'tarifas.habitaciontipo_id')
-          ->where('habitacion_tipos.id', '=', $valth)
-          ->select('tarifas.id', 'tarifas.valor', 'tarifas.nombre')->get();
-
-    } else {
-        $hablibres = [];
-        $tarifa = [];
-        $tipohab = HabitacionTipo::all(); $valth = 0; }
-
-
-    return View::make('/reservaciones/create', compact(['hablibres'], 'tipohab', 'valth', 'tarifa', 'rol'));
-});  */
-
-//Habitación adicional a la Reserva
-
-Route::get('/reservaciones/{reserva_id}/createadicional', function($id){
-    $tipohab = HabitacionTipo::all();
-
-    $reserva = $id; // le pasa el id de la reserva
-
-    $fechaentrada = Input::has('fechaentrada') ? Input::get('fechaentrada') : null;
-    $fechasalida = Input::has('fechasalida') ? Input::get('fechasalida') : null;
-    $tipohab = Input::has('tipohab') ? Input::get('tipohab') : null;
-    $rol = Role::find(2);
-
-    if($fechasalida != null) {
-        $valth = $tipohab;
-
-
-          $hablibres = DB::table('habitaciones')
-            ->where('habitaciones.habitacion_tipo_id', '=', $valth)
-            ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
-            ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
-            ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
-                 {
-                    $query->from('estadia_habitaciones')
-                    ->where('estadia_habitaciones.fechasalida', '>=', $fechasalida)
-                    ->orWhere('estadia_habitaciones.fechasalida', '>', $fechaentrada)
-                    ->select('estadia_habitaciones.habitacione_id');
-                 })
-            ->whereNotIn('habitaciones.id', function($query) use ($valth, $fechaentrada, $fechasalida)
-                {
-                    $query->from('reservacion_habitaciones')
-                    ->where('reservacion_habitaciones.fechasalida', '>=', $fechasalida)
-                    ->orWhere('reservacion_habitaciones.fechasalida', '>', $fechaentrada)
-                    ->select('reservacion_habitaciones.habitacione_id');
-                })
-
-           ->get();
-
-
-        $tipohab = HabitacionTipo::all();
-
-        $tarifa = DB::table('tarifas')
-          ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'tarifas.habitaciontipo_id')
-          ->where('habitacion_tipos.id', '=', $valth)
-          ->select('tarifas.id', 'tarifas.valor', 'tarifas.nombre')->get();
-
-    } else {
-        $hablibres = [];
-        $tarifa = [];
-        $tipohab = HabitacionTipo::all(); $valth = 0; }
-
-
-    return View::make('/reservaciones/createadicional', compact(['hablibres'], 'tipohab', 'valth', 'tarifa', 'rol', 'reserva'));
-});
+Route::get('/reservaciones/{reserva_id}/createadicional', 'ReservacioneController@createadicional')->middleware('auth');

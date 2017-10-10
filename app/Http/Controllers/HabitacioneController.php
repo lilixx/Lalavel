@@ -10,6 +10,8 @@ use Teodolinda\HabitacionTipo;
 
 use Teodolinda\HabitacionArea;
 
+use Teodolinda\EstadiaHabitacione;
+
 use Teodolinda\ReservacionHabitacione;
 
 use DB;
@@ -75,27 +77,60 @@ class HabitacioneController extends Controller
       $habarea = HabitacionArea::all();
       $habitacion = Habitacione::all();
       $mes = date('m');
+      $diactual = date('d');
 
-    //  dd($count);
+    /*  $count = DB::table('habitacion_areas')
+      ->join('habitaciones', 'habitaciones.habitacion_area_id', '=', 'habitacion_areas.id')
+      ->select(DB::raw('count(*) as count_area, habitacion_areas.id'))
+      ->groupBy('habitacion_areas.id')
+      ->get(); */
 
-  /*    foreach($count as $co){
-        foreach($habarea as $ha){
-          if($ha->id == $co->id){
-          $counts[] =  [
-            'cantidad' => $co,
-          ];
-        }
+       foreach($habarea as $ar){
+          foreach($ar->habitaciones as $hab){
+
+                $habi[] =  [
+                  'numhab'=> $hab->numero,
+                  'idarea'=>$ar->id,
+                ];
+
+           }
        }
-      }
-      dd($counts); */
 
 
-      //dd($count);
-      //dd($mes);
-      $reserva = ReservacionHabitacione::where(function($query) use ($mes){
-        $query->whereMonth('fechaentrada', '=', $mes)
-              ->orWhere('fechasalida', '=', $mes);
+     $reserva = ReservacionHabitacione::where('cancelada', '=', 0)
+     ->where(function($query) use ($mes){
+        $query->whereMonth('fechasalida', '=', $mes)
+              ->orWhere('fechaentrada', '=', $mes);
       })->get();
+
+      $estadia = EstadiaHabitacione::where('activo', '=', 1)
+      ->where(function($query) use ($mes){
+         $query->whereMonth('fechasalida', '=', $mes)
+               ->orWhere('fechaentrada', '=', $mes);
+       })->get();
+
+    // Cuenta las Reservaciones_id para saber si es una reserva en grupo
+    $reservacount =  DB::table('reservacion_habitaciones')
+    ->where('reservacion_habitaciones.cancelada', '=', 0)
+    ->where(function($query) use ($mes){
+        $query->whereMonth('fechasalida', '=', $mes)
+              ->orWhere('fechaentrada', '=', $mes);
+      })
+    ->select(DB::raw('count(*) as count_reserva, reservacion_habitaciones.reservacione_id'))
+    ->groupBy('reservacione_id')->get();
+
+    //Cuenta las Estadias_id para saber si es una estadia de un grupo
+    $estadiacount =  DB::table('estadia_habitaciones')
+    ->where('estadia_habitaciones.activo', '=', 1)
+    ->where(function($query) use ($mes){
+        $query->whereMonth('fechasalida', '=', $mes)
+              ->orWhere('fechaentrada', '=', $mes);
+      })
+    ->select(DB::raw('count(*) as count_estadia, estadia_habitaciones.estadia_id'))
+    ->groupBy('estadia_id')->get();
+
+    //  dd($reservacount);
+      //dd($reserva);
 
       $dias=(date("t"));
 
@@ -103,57 +138,83 @@ class HabitacioneController extends Controller
         $day[] = $dia;
       }
 
-      foreach($day as $di){
-      //  $containers[] = ['dia'=>$di,];
+
+
         $c = 0;
-        $lastday = 0;
+
+
+
         foreach($reserva as $rs){
+        foreach($reservacount as $rc){
+
+          if($rc->reservacione_id == $rs->reservacione->id){
           $diaentrada = date("d", strtotime($rs->fechaentrada)); //dd($dia);
           $diasalida = date("d", strtotime($rs->fechasalida)); //dd($dia);
-          if($di == $diaentrada || $di == $diasalida && ($di>=$diaentrada && $di<=$diasalida)) {
-              $c = $c+1;
-              $containers[] =  [
-                'dia'=> $di,
-                'mesentrada'=> date("m", strtotime($rs->fechaentrada)),
-                'messalida' => date("m", strtotime($rs->fechasalida)),
-                'diaentrada'=> date("d", strtotime($rs->fechaentrada)),
-                'diasalida' => date("d", strtotime($rs->fechasalida)),
-                'numreserva'=>$rs->reservacione->id,
-                'numhab'=>$rs->habitacione->numero,
-                'tipo'=>$rs->habitacione->habitaciontipo->nombre,
-                'fechaentrada'=>$rs->fechaentrada,
-                'fechasalida'=>$rs->fechasalida,
-                'tarifa'=>$rs->tarifa->valor,
-                //'reservadopor'=>$rs->reservacionentidadroles->entidade->nombres,
-              ];
+                  $c = $c+1;
+                  $containers[] =  [
+                    'mesentrada'=> date("m", strtotime($rs->fechaentrada)),
+                    'messalida' => date("m", strtotime($rs->fechasalida)),
+                    'diaentrada'=> date("d", strtotime($rs->fechaentrada)),
+                    'diasalida' => date("d", strtotime($rs->fechasalida)),
+                    'numero'=>$rs->reservacione->id,
+                    'activo'=>$rs->reservacione->activo,
+                    'numhab'=>$rs->habitacione->numero,
+                    'tipo'=>$rs->habitacione->habitaciontipo->nombre,
+                    'fechaentrada'=>$rs->fechaentrada,
+                    'fechasalida'=>$rs->fechasalida,
+                    'tarifa'=>$rs->tarifa->valor,
+                    'nombretar'=>$rs->tarifa->nombre,
+                    'noshow'=>$rs->reservacione->noshow,
+                    'grupo'=>$rc->count_reserva,
+                    'estadia'=>0,
+                    'idreservahab'=>$rs->id,
+                    //'reservadopor'=>$rs->reservacionentidadroles->entidade->nombres,
+                  ];
+
+           }
+
+         }
+
+       }
+
+       foreach($estadia as $es){
+         foreach($estadiacount as $ec){
+           if($ec->estadia_id == $es->estadia->id){
+             $diaentrada = date("d", strtotime($es->fechaentrada)); //dd($dia);
+             $diasalida = date("d", strtotime($es->fechasalida)); //dd($dia);
+             $containers[] =  [
+               'mesentrada'=> date("m", strtotime($es->fechaentrada)),
+               'messalida' => date("m", strtotime($es->fechasalida)),
+               'diaentrada'=> date("d", strtotime($es->fechaentrada)),
+               'diasalida' => date("d", strtotime($es->fechasalida)),
+               'numero'=>$es->estadia->id,
+               'activo'=>'',
+               'numhab'=>$es->habitacione->numero,
+               'tipo'=>$es->habitacione->habitaciontipo->nombre,
+               'fechaentrada'=>$es->fechaentrada,
+               'fechasalida'=>$es->fechasalida,
+               'tarifa'=>$es->tarifa->nombre,
+               'nombretar'=>$es->tarifa->nombre,
+               'noshow'=>'',
+               'estadia'=>'1',
+               'grupo'=>$ec->count_estadia,
+               'idreservahab'=>'',
+
+               //'reservadopor'=>$rs->reservacionentidadroles->entidade->nombres,
+             ];
           }
-          $lasday=$diaentrada;
         }
-
-        if($c == 0){
-          $containers[] = [
-            'dia'=>$di,
-            'mesentrada'=>'',
-            'messalida'=>'',
-            'diaentrada'=>'',
-            'diasalida'=>'',
-            'numreserva'=>'',
-            'numhab'=>'',
-            'tipo'=>'',
-            'fechaentrada'=>'',
-            'fechasalida'=>'',
-            'tarifa'=>'',
-          ];
-        }
-
       }
+
+
 
       //dd($containers);
 
       $n = 1;
+      $j=1;
 
 
-      return view('habitaciones.showweek',compact('habtipo', 'habarea', 'habitacion', 'day', 'reserva', 'containers', 'n', 'mes', 'lastday'));
+      return view('habitaciones.showweek',compact('habtipo', 'habarea', 'habitacion', 'day', 'reserva', 'containers', 'n', 'mes', 'lastday', 'count', 'habi', 'j', 'diactual'));
 
     }
 

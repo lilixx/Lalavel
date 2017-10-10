@@ -2,7 +2,6 @@
  use Illuminate\Support\Facades\Input; ?>
 <!--vue -->
 <script src="{{asset('js/vue.min.js')}}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.js"></script>
 <script src="{{asset('js/vue-resource.min.js')}}"></script>
 
 <!-- Jquery -->
@@ -16,6 +15,10 @@
 
 <!-- Languaje -->
 <script src="{{asset('datepicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
+
+
+
+<link href="/css/step.css" rel="stylesheet">
 
 
 @extends('layouts.app')
@@ -61,10 +64,7 @@
                        <div class="input-group">
                            <input id="dateofchange" track-by="date" v-model="film2"
                             v-on:change="GetActors()" v-bind:disabled="disableWhenSelect" class="form-control datepicker" name="fechaentrada"
-                             @if(empty(Input::get('fechaentrada')))
-                               value="{{$reservahab->fechaentrada}}">
-                             @else value="{{Input::get('fechaentrada')}}">
-                             @endif
+                            value="{{Input::get('fechaentrada')}}">
                            <div class="input-group-addon">
                              <span class="glyphicon glyphicon-calendar"></span>
                            </div>
@@ -80,10 +80,7 @@
                      <div class="col-sm-8">
                        <div class="input-group">
                            <input id="EffectiveDate" type="text" class="form-control datepicker" name="fechasalida"
-                           @if(empty(Input::get('fechasalida')))
-                             value="{{$reservahab->fechasalida}}">
-                            @else value="{{Input::get('fechasalida')}}">
-                           @endif
+                           value="{{Input::get('fechasalida')}}">
                            <div class="input-group-addon">
                              <span class="glyphicon glyphicon-calendar"></span>
                            </div>
@@ -155,6 +152,42 @@
 </div>
 
 </form>
+
+<script type="text/javascript">
+function addDays(date) {
+    var d = new Date(date);
+    d.setDate(d.getDate() + 1);
+    return d;
+}
+function addYear(date){
+    var d = new Date(date);
+    d.setFullYear(d.getFullYear() + 2);
+    return d;
+}
+
+$('#dateofchange').datepicker({
+    showButtonPanel: true,
+    dateFormat: 'yy-mm-dd',
+    minDate: new Date(),
+
+    // change EffectiveDate minDate and maxDate when the user selects a date in #dateofchange
+    onSelect:function(dateText, inst) {
+        var d = new Date(dateText);
+        $("#EffectiveDate").datepicker( "option", "minDate", addDays(d));
+        $("#EffectiveDate").datepicker( "option", "maxDate", addYear(d));
+    }
+});
+
+$('#EffectiveDate').datepicker({
+    showButtonPanel: true,
+    minDate: addDays(new Date()),
+    maxDate: addYear(new Date()),
+    dateFormat: 'yy-mm-dd',
+    locale: 'es',
+});
+
+
+</script>
 
 
 @endsection
