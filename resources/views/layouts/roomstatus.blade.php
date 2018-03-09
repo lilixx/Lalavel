@@ -17,6 +17,7 @@
     <link href="/css/menu.css" rel="stylesheet">
     <link href="/css/general.css" rel="stylesheet">
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
 
     <!-- Scripts -->
     <script>

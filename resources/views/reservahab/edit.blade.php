@@ -35,9 +35,17 @@
   <h1 class="titulo reserva"> Modificar Reservación </h1>
   <form action="{{URL::current()}}">
 
-    Tipo de Habitación: {{$reservahab->habitacione->habitaciontipo->nombre}} <br/>
-    Número de Habitacion: {{$reservahab->habitacione->numero}} <br/>
-    Tarifa: ${{$reservahab->tarifa->valor}} <hr>
+   <div class="col-lg-12" style="margin-bottom: 2em;">
+    <div class="col-lg-6">
+      Tipo de Habitación: {{$reservahab->habitacione->habitaciontipo->nombre}} <br/>
+      Número de Habitacion: {{$reservahab->habitacione->numero}} <br/>
+   </div>
+   <div class="col-lg-6">
+      Fecha Entrada: {{$reservahab->fechaentrada}}<br/>
+      Fecha Salida: {{$reservahab->fechasalida}}<br/>
+      Tarifa: ${{$reservahab->tarifa->valor}} <hr>
+   </div>
+ </div>
 
 
           <div class="col-lg-12">

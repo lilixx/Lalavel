@@ -78,14 +78,15 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="titulo" class="col-sm-4 control-label">Fecha de Salida</label>
-                        <div class="col-sm-8">
+                       <div class="col-sm-8">
                           <div class="input-group">
-                              <input type="text" class="form-control datepicker" name="fechasalida[]" value="{{ $rh->fechasalida }}">
+                              <input type="text" class="form-control datepicker" v-model="film2" readonly="true" name="fechasalida[]"
+                                value="{{ $rh->fechasalida }}">
                               <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                               </div>
                           </div>
-                         </div>
+                      </div>
                       </div>
                    </div>
 

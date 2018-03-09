@@ -36,43 +36,45 @@
 
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
- <h1 class="titulo estadia"> Modificar Precio y Comentario </h1>
+ <h1 class="titulo estadia"> Modificar Precio y Observaciones </h1>
 
 
   <div class="content">
 
-     <form action="{{URL::current()}}">
 
-
-            <form class="form-horizontal" role="form" method="POST" action="{{ url('reservacionesadd') }}" enctype="multipart/form-data">
-             {{ csrf_field() }}
+    <form class="form-horizontal" role="form" method="POST" action="{{ route('estadiahab.update', $estadiahab->id ) }}" enctype="multipart/form-data">
+    <input name="_method" type="hidden" value="PUT">
+     {{ csrf_field() }}
 
                   <input type="hidden" name="reservacione_id" value="">
 
                   <div class="col-lg-12">
+                    <div class="form-group">
                      <label for="titulo" class="col-sm-2 control-label">Tarifa</label>
                      <div class="col-sm-8">
-                       <select  class="form-control" name="tarifa_id">
+                       <select  class="form-control" name="tarifa_id" style="margin-bottom: 1em;">
                         <option value="0" selected="true" disabled="true">Seleccione una Tarifa</option>
-                         @foreach ($tarifa as $tr)
-                             <option value="{{$tr->id}}">{{$tr->nombre}} - ${{$tr->valor}} </option>
-                         @endforeach
+                          @foreach ($tarifa as $tar)
+                             <option value="{{ $tar->id }}"  @if($tar->id==$estadiahab->tarifa_id)
+                                     selected='selected' @endif> {{ $tar->nombre }}   </option>
+                          @endforeach
                        </select>
                     </div>
                    </div>
+                 </div>
 
 
              <div class="col-lg-8">
                 <div class="form-group">
-                  <label for="titulo" class="col-sm-4 control-label">Comentarios</label>
+                  <label for="titulo" class="col-sm-4 control-label">Observaciones</label>
                   <div class="col-sm-8">
-                    <textarea class="form-control" rows="3" name="comentario"  placeholder="Comentarios"></textarea>
+                    <textarea class="form-control" rows="3" name="comentario">{{$estadiahab->comentario}}</textarea>
                   </div>
                 </div>
              </div>
 
              <button type="submit" class="btn btn-edit" style="float:right; margin-bottom:1em;">
-              <span class="glyphicon glyphicon-send" aria-hidden="true"></span>  Finalizar</button>
+              <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>  Modificar</button>
 
 
          </form>

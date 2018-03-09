@@ -270,7 +270,7 @@
 
 <script>
     $('.datepicker').datepicker({
-        format: "yyyy-mm-dd",
+        dateFormat: 'yy-mm-dd',
         language: "es",
         autoclose: true
     });

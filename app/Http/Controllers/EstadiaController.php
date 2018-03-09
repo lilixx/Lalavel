@@ -79,40 +79,62 @@ class EstadiaController extends Controller
         ->where('habitaciones.habitacion_tipo_id', '=', $tipohab)
         ->join('habitacion_tipos', 'habitacion_tipos.id', '=', 'habitaciones.habitacion_tipo_id')
         ->select('habitaciones.id', 'habitaciones.numero', 'habitacion_tipos.nombre')
+        ->where('habitaciones.limpia', '=', 1)
+        ->where('habitaciones.disponible', '=', 1)
         ->whereNotIn('habitaciones.id', function($query) use ($fechaentrada, $fechasalida)
              {
                 $query->from('estadia_habitaciones')
-                ->where('estadia_habitaciones.activo', '=', 1)
-                ->Where(function($query) use ($fechasalida, $fechaentrada)
+               ->where(function($query) use ($fechasalida, $fechaentrada)
                 {
-                          $query->where('estadia_habitaciones.fechaentrada', '<=', $fechaentrada)
+                          $query->where('estadia_habitaciones.activo', '=', 1)
+                          ->where('estadia_habitaciones.fechaentrada', '<=', $fechaentrada)
                           ->where('estadia_habitaciones.fechasalida', '>', $fechaentrada);
                  })
                ->orWhere(function($query) use ($fechasalida, $fechaentrada)
                  {
-                         $query->Where('estadia_habitaciones.fechaentrada', '<', $fechasalida )
+                         $query->where('estadia_habitaciones.activo', '=', 1)
+                         ->Where('estadia_habitaciones.fechaentrada', '<', $fechasalida )
                          ->where('estadia_habitaciones.fechaentrada', '>', $fechaentrada );
 
                    })
                 ->select('estadia_habitaciones.habitacione_id');
              })
-        ->whereNotIn('habitaciones.id', function($query) use ($fechaentrada, $fechasalida)
+         ->whereNotIn('habitaciones.id', function($query) use ($fechaentrada, $fechasalida)
             {
                 $query->from('reservacion_habitaciones')
-                 ->where('reservacion_habitaciones.activo', '=', 1)
-                 ->Where(function($query) use ($fechasalida, $fechaentrada)
+                ->Where(function($query) use ($fechasalida, $fechaentrada)
                  {
-                           $query->where('reservacion_habitaciones.fechaentrada', '<=', $fechaentrada)
+                           $query->where('reservacion_habitaciones.activo', '=', 1)
+                           ->where('reservacion_habitaciones.fechaentrada', '<=', $fechaentrada)
                            ->where('reservacion_habitaciones.fechasalida', '>', $fechaentrada);
                   })
                 ->orWhere(function($query) use ($fechasalida, $fechaentrada)
                   {
-                          $query->Where('reservacion_habitaciones.fechaentrada', '<', $fechasalida )
+                          $query->where('reservacion_habitaciones.activo', '=', 1)
+                          ->Where('reservacion_habitaciones.fechaentrada', '<', $fechasalida )
                           ->where('reservacion_habitaciones.fechaentrada', '>', $fechaentrada );
 
                     })
                 ->select('reservacion_habitaciones.habitacione_id');
             })
+            ->whereNotIn('habitaciones.id', function($query) use ($fechaentrada, $fechasalida)
+               {
+                   $query->from('bloqueos')
+                   ->Where(function($query) use ($fechasalida, $fechaentrada)
+                    {
+                              $query->where('bloqueos.activo', '=', 1)
+                              ->where('bloqueos.fechainicio', '<=', $fechaentrada)
+                              ->where('bloqueos.fechafin', '>', $fechaentrada);
+                     })
+                   ->orWhere(function($query) use ($fechasalida, $fechaentrada)
+                     {
+                             $query->where('bloqueos.activo', '=', 1)
+                             ->Where('bloqueos.fechainicio', '<', $fechasalida )
+                             ->where('bloqueos.fechafin', '>', $fechaentrada );
+
+                       })
+                   ->select('bloqueos.habitacione_id');
+               })
 
        ->get();
 
@@ -137,7 +159,7 @@ class EstadiaController extends Controller
      */
     public function store(Request $request)
     {
-      //  dd($request->all());
+        //dd($request->all());
 
         if (!empty($request->estadia_id)) { //si es una hab. adicional a la estadia
 
@@ -161,6 +183,7 @@ class EstadiaController extends Controller
             $estadiahab = new EstadiaHabitacione();
             $estadiahab->fechaentrada = date("Y-m-d");
             $estadiahab->fechasalida = $request->fechasalida;
+            $estadiahab->comentario = $request->comentario;
             $estadiahab->tarifa_id = $request->tarifa_id;
             $estadiahab->habitacione_id = $request->habitacione_id;
             $estadiahabitacion = $estadia->estadiahabitaciones()->save($estadiahab);
@@ -203,6 +226,7 @@ class EstadiaController extends Controller
                                  'fechasalida'=> $request->fechasalida[$key6],
                                  'tarifa_id'=> $request->tarifa_id[$key6],
                                  'habitacione_id' => $request->habitacione_id[$key6],
+
 
                               ));
               }
@@ -328,7 +352,9 @@ class EstadiaController extends Controller
        ->select('entidade_estadia_habitacione.id as identidadesthab', 'entidade_estadia_habitacione.estadia_habitacione_id as idestadiahab',
         'entidades.nombres', 'entidades.apellidos', 'entidades.id as identidad')->get();
 
-       return view('estadias.show',compact('estadia', 'entidades'));
+       if($estadia->activo == 1){
+         return view('estadias.show',compact('estadia', 'entidades'));
+       }
 
     }
 

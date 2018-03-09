@@ -40,26 +40,26 @@
       <a href="reservaciones/{{ $h->id }}/show" class="btn btn-primary" title="Ver">
       <span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
 
-      <a href="/reservaciones/{{$h->id}}/createadicional" class="btn btn-success" title="Agregar Habitacion a la Reserva">
-      <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
-
-      <a href="/reservaciones/{{$h->id}}/estadia" class="btn btn-purple" title="Pasar a Estadía">
-      <span class="glyphicon glyphicon-bell" aria-hidden="true"></span></a>
-
-
       @foreach($h->reservacionhabitaciones as $rh)
+          @if($datetoday <= $rh->fechaentrada)
+            <a href="/reservaciones/{{$h->id}}/createadicional" class="btn btn-success" title="Agregar Habitacion a la Reserva">
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
+          @else
+             <form class="form-horizontal" role="form" method="POST" action="{{ route('reservaciones.noshow', $h->id ) }}" enctype="multipart/form-data"
+                onsubmit="return confirm('¿Está seguro de No show?')">
+               <input name="_method" type="hidden" value="PUT">
+                {{ csrf_field() }}
+                <button type="submit" class="btn btn-warning" title="No Show">
+                  <span class="fa fa-bell-slash" aria-hidden="true"></span>
+                </button>
+             </form>
 
-            @if($datetoday > $rh->fechaentrada)
-              <form class="form-horizontal" role="form" method="POST" action="{{ route('reservaciones.noshow', $h->id ) }}" enctype="multipart/form-data"
-                 onsubmit="return confirm('¿Está seguro de No show?')">
-                <input name="_method" type="hidden" value="PUT">
-                 {{ csrf_field() }}
-                 <button type="submit" class="btn btn-warning" title="No Show">
-                   <span class="fa fa-bell-slash" aria-hidden="true"></span>
-                 </button>
-              </form>
-              @break
-            @endif
+          @endif
+          @if($datetoday == $rh->fechaentrada)
+            <a href="/reservaciones/{{$h->id}}/estadia" class="btn btn-purple" title="Pasar a Estadía">
+            <span class="glyphicon glyphicon-bell" aria-hidden="true"></span></a>
+          @endif
+         @break
 
       @endforeach
 

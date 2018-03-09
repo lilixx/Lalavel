@@ -59,8 +59,7 @@
                    <label for="titulo" class="col-sm-2 control-label">Fecha de Entrada</label>
                      <div class="col-sm-8">
                        <div class="input-group">
-                           <input id="dateofchange" track-by="date" v-model="film2"
-                            v-on:change="GetActors()" v-bind:disabled="disableWhenSelect" class="form-control datepicker" name="fechaentrada"
+                           <input type="text" class="form-control datepicker" v-model="film2" readonly="true" name="fechaentrada"
                              @if(empty(Input::get('fechaentrada')))
                                value="{{$estadiahab->fechaentrada}}">
                              @else value="{{Input::get('fechaentrada')}}">
@@ -79,7 +78,7 @@
                    <label for="titulo" class="col-sm-2 control-label">Fecha de Salida</label>
                      <div class="col-sm-8">
                        <div class="input-group">
-                           <input id="EffectiveDate" type="text" class="form-control datepicker" name="fechasalida"
+                           <input id="dateofchange" type="text" class="form-control datepicker" name="fechasalida"
                            @if(empty(Input::get('fechasalida')))
                              value="{{$estadiahab->fechasalida}}">
                            @else value="{{Input::get('fechasalida')}}">
@@ -153,6 +152,27 @@
 </div>
 
 </form>
+
+<script type="text/javascript">
+function addDays(date) {
+    var d = new Date(date);
+    d.setDate(d.getDate() + 1);
+    return d;
+}
+function addYear(date){
+    var d = new Date(date);
+    d.setFullYear(d.getFullYear() + 2);
+    return d;
+}
+
+$('#dateofchange').datepicker({
+    showButtonPanel: true,
+    dateFormat: 'yy-mm-dd',
+    minDate: new Date(),
+
+});
+
+</script>
 
 
 @endsection

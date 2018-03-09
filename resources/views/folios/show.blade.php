@@ -78,7 +78,8 @@
     </div>
 </div>
 
-<div class="col-lg-10">
+
+<div class="col-lg-10" style="margin-top:2em;">
 
  @if((!($cargo->isEmpty()) || (!empty($folio->estadia_id))) && $foliohijo->isEmpty())
   <a style="float:right; margin-left: 0.5em;" href="<?php echo  url('/');?>/folios/{{ $folio->id }}/showinvoice" class="btn btn-danger">
@@ -125,13 +126,15 @@
 <table class="table table-striped">
     <thead>
         <tr>
-          <th>Habitaciones</th>
+          <th>Habitaciones</th><th><label for="titulo" class="col-sm-5 control-label">
+            <a href="/estadias/{{$folio->estadia_id}}/show" target="_blank">Ver Estadía</a></label> </th>
           <th><a href="<?php echo  url('/');?>/dochuespede//create" class="btn btn-info" title="Agregar">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
           </th>
         </tr>
         <tr>
             <th>Número</th>
+            <th></th>
             <th>Acciones</th>
         </tr>
     </thead>

@@ -23,11 +23,11 @@
     Habitación: {{$esthab->habitacione->numero}}<br/>
 
     <input type="hidden" name="habitacion_id[]" value="{{$esthab->habitacione->id}}">
+    <input type="hidden" name="estadia_hab_id[]" value="{{$esthab->id}}">
 
     @foreach($entidades as $en)
       @if($esthab->id == $en->idestadiahab)
         {{$en->nombres}} {{$en->apellidos}}<br/>
-        <input type="hidden" name="estadia_hab_id[]" value="{{$esthab->id}}">
         <input type="hidden" name="entidad_id[]" value="{{$en->identidad}}">
         <input type="hidden" name="estadia_hab_entidad_id[]" value="{{$en->identidadesthab}}">
       @endif

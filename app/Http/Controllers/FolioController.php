@@ -175,8 +175,9 @@ class FolioController extends Controller
         $estadia = Estadia::find($request->estadia_id);
         $estadia->activo = 0;
         $estadia->update();
+        $fechasalida = date('Y-m-d');
 
-        foreach($request->habitacion_id as $key=> $v) //recorre todos los cargos a moverse
+        foreach($request->habitacion_id as $key=> $v) //pasa las hab a disponibles y sucias
          {
               $habitacion = Habitacione::find($request->habitacion_id[$key]);
               $habitacion->disponible = 1;
@@ -184,25 +185,25 @@ class FolioController extends Controller
               $habitacion->update();
          }
 
-         foreach($request->estadia_hab_id as $key2=> $v2) //recorre todos los cargos a moverse
+         foreach($request->estadia_hab_id as $key2=> $v2) //pasa las estadias hab. a inactiva
           {
                $estadiahab = EstadiaHabitacione::find($request->estadia_hab_id[$key2]);
                $estadiahab->activo = 0;
                $estadiahab->update();
           }
 
-          foreach($request->entidad_id as $key3=> $v3) //recorre todos los cargos a moverse
+          foreach($request->entidad_id as $key3=> $v3) //pasa a inactivo a los huespedes
            {
                 DB::table('entidades')
                 ->where('id', $request->entidad_id[$key3])
                 ->update(['activo' => 0]);
            }
 
-           foreach($request->estadia_hab_entidad_id as $key4=> $v4) //recorre todos los cargos a moverse
+           foreach($request->estadia_hab_entidad_id as $key4=> $v4) //pasa a inactivo las entidade_estadia_habitacione
             {
                 DB::table('entidade_estadia_habitacione')
                 ->where('id', $request->estadia_hab_entidad_id[$key4])
-                ->update(['activo' => 0]);
+                ->update(['activo' => 0], ['fechasalida' => $fechasalida]);
             }
 
           return redirect('folios')->with('msj', 'Datos Actualizados');
@@ -236,7 +237,9 @@ class FolioController extends Controller
         ->join('entidades', 'entidades.id', '=', 'entidade_role.entidade_id')
         ->select('entidade_role.id', 'entidades.nombres', 'entidades.apellidos')->get();
 
-        return view('folios.show',compact('folio', 'foliohijo', 'categoria', 'cargo', 'entidad', 'entidadhijo'));
+        if($folio->activo == 1){
+          return view('folios.show',compact('folio', 'foliohijo', 'categoria', 'cargo', 'entidad', 'entidadhijo'));
+        }
     }
 
     /**
@@ -245,7 +248,7 @@ class FolioController extends Controller
 
     public function showstatus($id)
     {
-        $folio = Folio::find($id);
+        $folio = Folio::find($id); //dd($folio);
 
         //dd($folio->entidadrole->entidade->nombres);
         $foliohijo = Folio::where('foliopadre_id', '=', $id)->where('activo', 1)->get();
@@ -253,6 +256,8 @@ class FolioController extends Controller
         $categoria = FolioRestrinccionCategoria::where('folio_id', '=', $id)->where('activo', 1)->get();
 
         $cargo = FolioCargo::where('folio_id', '=', $id)->where('cubeta', 0)->get();
+
+        //dd($cargo);
 
         $entidad = DB::table('entidade_role')
         ->join('folios', 'entidade_role.id', '=', 'folios.entidadrole_id')
@@ -273,14 +278,16 @@ class FolioController extends Controller
 
        foreach ($cargo as $car){
 
+         $tarifacargo = $car->servicio->tarifa()->where('activo', 1)->value('valor');
+
         // Si el cargo tiene descuento se le aplica el descuento
          if($car->descuento_id != NULL) {
-           $precio = $car->servicio->precio -($car->servicio->precio * ($car->descuento->porcentaje /100));
+           $precio = $tarifacargo -($tarifacargo * ($car->descuento->porcentaje /100));
          } elseif($car->servicio->categoria->id == 1){
            $precio = $car->estadiahabitacion->tarifa->valor;
            //dd($precio);
          } else{
-            $precio = $car->servicio->precio;
+            $precio = $tarifacargo;
          }
          //dd($precio);
          $subtotal = $subtotal + ($precio * $car->cantidad);
@@ -293,7 +300,9 @@ class FolioController extends Controller
             $intur=$intur+($precio *0.02);
 
          }
-       }
+       } //dd($precio);
+
+       //dd($tarifacargo);
 
        $total = $subtotal+$iva+$intur;
        $total= number_format((float)$total, 2, '.', '');
@@ -365,26 +374,32 @@ class FolioController extends Controller
 
                  $date = $cat->created_at;
 
+                 // cargo con descuento
+
                   $import2 = DB::table('folio_cargos')
                   ->where('folio_cargos.folio_id', '=', $id)
                   ->where('folio_cargos.cubeta', '=', 0)
                   ->join('servicios', 'servicios.id', '=', 'folio_cargos.servicio_id')
                   ->join('descuentos', 'descuentos.id', '=', 'folio_cargos.descuento_id')
                   ->where('servicios.categoria_id', '=', $id2)
+                  ->join('tarifas', 'tarifas.servicio_id', '=', 'servicios.id')
                   ->join('categorias', 'categorias.id', '=', 'servicios.categoria_id')
                   ->where('folio_cargos.descuento_id', '!=', NULL)
-                  ->sum(DB::raw('folio_cargos.cantidad * (servicios.precio -(servicios.precio * (descuentos.porcentaje /100)))'));
+                  ->sum(DB::raw('folio_cargos.cantidad * (tarifas.valor -(tarifas.valor * (descuentos.porcentaje /100)))'));
 
+                 //cargo normales
                    $import = DB::table('folio_cargos')
                    ->where('folio_cargos.folio_id', '=', $id)
                    ->where('folio_cargos.cubeta', '=', 0)
                    ->join('servicios', 'servicios.id', '=', 'folio_cargos.servicio_id')
                    ->where('servicios.categoria_id', '=', $id2)
+                   ->join('tarifas', 'tarifas.servicio_id', '=', 'servicios.id')
                    ->join('categorias', 'categorias.id', '=', 'servicios.categoria_id')
                    ->where('folio_cargos.descuento_id', '=', NULL)
                    ->where('servicios.categoria_id', '!=', 1)
-                   ->sum(DB::raw('servicios.precio * folio_cargos.cantidad'));
+                   ->sum(DB::raw('tarifas.valor * folio_cargos.cantidad'));
 
+                 //cargo de habitaciones
                    $import3 = DB::table('folio_cargos')
                    ->where('folio_cargos.folio_id', '=', $id)
                    ->where('folio_cargos.cubeta', '=', 0)
@@ -474,13 +489,15 @@ class FolioController extends Controller
 
        foreach ($cargo as $car){
 
+         $tarifacargo = $car->servicio->tarifa()->where('activo', 1)->value('valor');
+
         // Si el cargo tiene descuento se le aplica el descuento
          if($car->descuento_id != NULL) {
-           $precio = $car->servicio->precio -($car->servicio->precio * ($car->descuento->porcentaje /100));
+           $precio = $tarifacargo -($tarifacargo * ($car->descuento->porcentaje /100));
          } elseif ($car->servicio->categoria->id == 1) {
             $precio = $car->estadiahabitacion->tarifa->valor;
          }  else{
-            $precio = $car->servicio->precio;
+            $precio = $tarifacargo;
          }
          //dd($precio);
          $subtotal = $subtotal + ($precio * $car->cantidad);
@@ -509,14 +526,24 @@ class FolioController extends Controller
        $intur= number_format((float)$intur, 2, '.', '');
        $iva=number_format((float)$iva, 2, '.', '');
        $total = $subtotal+$iva+$intur;
-       $total=number_format((float)$total, 2, '.', '');  
+       $total=number_format((float)$total, 2, '.', '');
        //dd($intur);
 
-       return view('folios.showinvoice')->with(['edit' => true, 'folio' => $folio, 'foliohijo' => $foliohijo, 'categoria' => $categoria,
-              'cargo' => $cargo, 'entidad' => $entidad, 'subtotal' => $entidad,'subtotal' =>$subtotal,
-               'iva' => $iva, 'sumtotal' => $sumtotal, 'supercategoria' => $supercategoria, 'intur' => $intur,
-               'count' => $count, 'total' => $total, 'valor' => $valor, 'importe' => $importe, 'id' =>$id]);
+       //Verifica si tiene un folio hijo y esta activo
+       if($folio->foliopadre_id == null){ // si es un folio padre
+          $foliohijo = Folio::where('foliopadre_id', $folio->id)->where('activo', 1)->count();
+       } else { //es un folio hijo
+         $foliohijo = 0;
+       }
 
+       if($foliohijo == 0){  
+         return view('folios.showinvoice')->with(['edit' => true, 'folio' => $folio, 'foliohijo' => $foliohijo, 'categoria' => $categoria,
+                'cargo' => $cargo, 'entidad' => $entidad, 'subtotal' => $entidad,'subtotal' =>$subtotal,
+                 'iva' => $iva, 'sumtotal' => $sumtotal, 'supercategoria' => $supercategoria, 'intur' => $intur,
+                 'count' => $count, 'total' => $total, 'valor' => $valor, 'importe' => $importe, 'id' =>$id]);
+       } else {
+          return back()->with('errormsj', 'Hay Folios hijos que no se han facturado');
+       }
 
     }
 

@@ -23,6 +23,8 @@ class CreateReservacionHabitacionesTable extends Migration
             $table->foreign('tarifa_id')->references('id')->on('tarifas');
             $table->date('fechaentrada');
             $table->date('fechasalida');
+            $table->longText('comentario')->nullable();
+            $table->boolean('cancelada')->default(0);
             $table->boolean('activo')->default(1);
             $table->timestamps();
         });

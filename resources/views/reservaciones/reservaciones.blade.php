@@ -11,7 +11,7 @@
     <div class="alert alert-info" role="alert">{{ session('msj') }}</div>
   @endif
   @if(session()->has('errormsj'))
-    <div class="alert alert-danger" role="alert">Error al guardar los datos</div>
+    <div class="alert alert-danger" role="alert">No se puede pasar a Estadía, hay Habitaciones Sucias o que No están Disponibles.</div>
   @endif
 
 <h1 class="titulo reserva"> Reservaciones </h1>

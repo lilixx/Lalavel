@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Teodolinda\Servicio;
 
+use Teodolinda\Tarifa;
+
 use Teodolinda\Categoria;
 
 class ServicioController extends Controller
@@ -49,8 +51,14 @@ class ServicioController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
         $request->user()->authorizeRoles(['Admin']);
         $servicio = Servicio::create($request->all());
+
+        //---------- Guarda la tarifa -------------
+         $tarifa = new Tarifa();
+         $tarifa->valor = $request->precio;
+         $servicio->tarifa()->save($tarifa);
 
         if($servicio->save()){
            return redirect('servicios')->with('msj', 'Datos guardados');
@@ -84,6 +92,43 @@ class ServicioController extends Controller
         return view('servicios.edit')
         ->with(['edit' => true, 'servicio' => $servicio, 'categoria' => $categoria]);
     }
+
+    /**
+     * Modificar precio
+     */
+
+     public function editprecio(Request $request, $id)
+     {
+         $request->user()->authorizeRoles(['Admin']);
+         $servicio = Servicio::find($id);
+          return view('servicios.editprecio')
+         ->with(['editprecio' => true, 'servicio' => $servicio]);
+     }
+
+    /**
+     * Guardar nuevo precio
+     */
+     public function storeprecio(Request $request, $id)
+     {
+       $request->user()->authorizeRoles(['Admin']);
+       /* Pasa a inactivo el precio anterior */
+        $precioanterior = Tarifa::where('servicio_id', $id)->first();
+        if (!empty($precioanterior)){ // si encontro un precio para el servicio
+          $precioanterior->activo = 0; //lo pasa a inactivo
+          $precioanterior->update();
+        }
+
+        $precio = new Tarifa();
+        $precio->valor = $request->precio;
+        $precio->servicio_id = $id;
+        $precio->save(); // guarda la nueva tarifa
+
+       if($precio->save()){
+         return redirect('servicios')->with('msj', 'Datos guardados');
+       } else {
+         return back()->with('errormsj', 'Los datos no se guardaron');
+       }
+     }
 
     /**
      * Update the specified resource in storage.

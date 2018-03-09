@@ -127,6 +127,24 @@ Route::group(['middleware' => 'auth'], function() {
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('/servicioadd', 'ServicioController');
 });
+Route::get('/servicios/{servicio_id}/editprecio', 'ServicioController@editprecio')->middleware('auth');
+Route::put('/servicios/{servicio_id}/storeprecio', 'ServicioController@storeprecio')->name('servicios.storeprecio');
+
+//Bloqueos
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/bloqueos', 'BloqueoController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/bloqueoadd', 'BloqueoController');
+});
+
+//Razon Bloqueos
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/razonbloqueos', 'RazonbloqueoController');
+});
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('/razonadd', 'RazonbloqueoController');
+});
 
 
 //Habitacion Tipo
@@ -153,7 +171,8 @@ Route::group(['middleware' => 'auth'], function() {
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('/habitacionadd', 'HabitacioneController');
 });
-Route::get('/habitaciones/month', 'HabitacioneController@habmonth')->middleware('auth');
+Route::get('/dirty', 'HabitacioneController@dirty')->middleware('auth');
+Route::get('/month', 'HabitacioneController@habmonth')->middleware('auth');
 
 
 
@@ -214,7 +233,8 @@ Route::group(['middleware' => 'auth'], function() {
 Route::get('/estadias/{estadia_id}/show', 'EstadiaController@show')->middleware('auth');
 Route::get('film/{id}', 'EstadiaController@GetFilmBYid')->middleware('auth');
 Route::get('film/{id}/{date}', 'EstadiaController@GetFilmBYid')->middleware('auth');
-Route::get('/estadiahab/{reservahab_id}/edit', 'EstadiaHabitacionController@edit')->middleware('auth');
+Route::get('/estadiahab/{estadiahab_id}/editcomentari', 'EstadiaHabitacionController@editcomentari')->middleware('auth');
+Route::get('/estadiahab/{estadiahab_id}/edit', 'EstadiaHabitacionController@edit')->middleware('auth');
 Route::get('/estadiaentidad/{estadiahabitacion}/createhuesped', 'EstadiaHabitacionController@createhuesped')->middleware('auth');
 Route::get('/estadiahab/{id}/move/', 'EstadiaHabitacionController@move')->middleware('auth');
 Route::get('/estadias/{estadia_id}/createadicional', 'EstadiaController@createadicional')->middleware('auth');
@@ -258,4 +278,5 @@ Route::get('/reservaciones/{reserva_id}/show', 'ReservacioneController@show')->m
 Route::get('/reservaciones/{reserva_id}/estadia', 'ReservacioneController@movestay')->middleware('auth');
 Route::get('/reservaentidad/{reservahabitacion}/createhuesped', 'ReservacionEntidadRoleController@createhuesped')->middleware('auth');
 Route::get('/reservahab/{reservahab_id}/edit', 'ReservacionHabitacioneController@edit')->middleware('auth');
+Route::get('/reservahab/{reservahab_id}/editcomentari', 'ReservacionHabitacioneController@editcomentari')->middleware('auth');
 Route::get('/reservaciones/{reserva_id}/createadicional', 'ReservacioneController@createadicional')->middleware('auth');

@@ -28,10 +28,7 @@ Fecha: {{$now = \Carbon\Carbon::now()->format('Y-m-d')}}
 </div>
 
 
-
-
-@if($folio->credito == 1)
-      <div class="col-lg-12">
+    <div class="col-lg-12">
       <table class="table table-striped">
           <thead>
 
@@ -61,11 +58,11 @@ Fecha: {{$now = \Carbon\Carbon::now()->format('Y-m-d')}}
 
               <td>
                 @if($car->descuento_id != NULL)
-                    <span>${{$car->servicio->precio * $car->cantidad - (($car->servicio->precio * $car->cantidad) * ($car->descuento->porcentaje /100))}} </span>
+                    <span>${{$car->servicio->tarifa()->where('activo', 1)->value('valor') * $car->cantidad - (($car->servicio->tarifa()->where('activo', 1)->value('valor') * $car->cantidad) * ($car->descuento->porcentaje /100))}} </span>
                 @elseif ($car->servicio->categoria->id == 1)
                     <span>${{($car->estadiahabitacion->tarifa->valor) * $car->cantidad}} </span>
-                @else    
-                    <span>${{$car->servicio->precio * $car->cantidad}} </span>
+                @else
+                    <span>${{$car->servicio->tarifa()->where('activo', 1)->value('valor') * $car->cantidad}}</span>
                 @endif
               </td>
 
@@ -84,6 +81,6 @@ Fecha: {{$now = \Carbon\Carbon::now()->format('Y-m-d')}}
 
       </table>
      </div>
-   @endif
+
 
 @endsection

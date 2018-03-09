@@ -18,6 +18,15 @@
       </li>
     </a>
 
+    <a class="m11" href="<?php echo  url('/');?>/bloqueos">
+      <li class="animate">
+        Bloqueos<i class="fa fa-lock  float-right"></i>
+      </li>
+    </a>
+    <ul><a class="m11" href="<?php echo  url('/');?>/razonbloqueos">
+       <li class="subm"><i class="fa fa-unlock-alt float-right"></i>Razón de Bloqueo</li></a>
+    </ul>
+
       <a class="m8" href="<?php echo  url('/');?>/estadias">
         <li class="animate">
           Estadías<i class="fa fa-sign-in float-right fa-3"></i>
@@ -42,6 +51,12 @@
           Habitaciones<i class="fa fa-bed float-right"></i>
        </li>
      </a>
+     <ul><a class="m3" href="<?php echo  url('/');?>/month">
+        <li class="subm"><i class="fa fa-calendar float-right"></i>Ver el mes</li></a>
+     </ul>
+     <ul><a class="m3" href="<?php echo  url('/');?>/dirty">
+        <li class="subm"><i class="fa fa-recycle float-right"></i>Sucias</li></a>
+     </ul>
      <ul><a class="m3" href="<?php echo  url('/');?>/habitaciontipos">
         <li class="subm"><i class="fa fa-bath float-right"></i>Tipos</li></a>
      </ul>

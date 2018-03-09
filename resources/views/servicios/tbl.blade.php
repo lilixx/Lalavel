@@ -16,7 +16,11 @@
       {{ $n->nombreservicio }}
     </td>
     <td>
-    $  {{ $n->precio }}
+      @foreach($n->tarifa as $tar)
+       @if($tar->activo == 1)
+        ${{ $tar->valor }}
+       @endif
+     @endforeach
     </td>
     <td>
       {{ $n->categoria->nombre }}
@@ -26,8 +30,11 @@
     </td>
     <td>
 
-      <a href="servicios/{{ $n->id }}/edit" class="btn btn-primary" title="Editar">
+    <a href="servicios/{{ $n->id }}/edit" class="btn btn-primary" title="Editar">
      <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+
+     <a href="servicios/{{ $n->id }}/editprecio" class="btn btn-success" title="Cambio de precio">
+     <span class="fa fa-usd" aria-hidden="true"></span></a>
 
      <a href="#" class="btn btn-danger" title="Dar de baja">
      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>

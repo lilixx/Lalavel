@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ReservacionProcedenciasTableSeeder::class);
         $this->call(UserTableSeeder::class);
         $this->call(RoleUserTableSeeder::class);
+        $this->call(RazonbloqueoTableSeeder::class);
 
     }
 }

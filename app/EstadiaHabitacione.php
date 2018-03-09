@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EstadiaHabitacione extends Model
 {
     protected $fillable = [
-        'habitacione_id', 'estadia_id', 'tarifa_id', 'fechaentrada', 'fechasalida',
+        'habitacione_id', 'estadia_id', 'tarifa_id', 'fechaentrada', 'fechasalida', 'comentario',
     ];
 
     public function entidades()

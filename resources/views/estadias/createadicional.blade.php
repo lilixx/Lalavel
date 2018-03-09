@@ -88,7 +88,7 @@
                   </div>
 
                  <div class="col-lg-6">
-                    <label for="titulo" class="col-sm-4 control-label">Número</label>
+                    <label for="titulo" class="col-sm-4 control-label">Núm. de Hab.</label>
                       <div class="col-sm-8">
                         <select name="habitacione_id" id="habitacione" class="form-control" v-model="habitacione" v-show="actorsShow"
                          value="habitacione_id">
@@ -97,11 +97,7 @@
                      </div>
                   </div>
 
-
-
-
-
-                  <div class="col-lg-12">
+                  <div class="col-lg-6">
                      <label for="titulo" class="col-sm-2 control-label">Tarifa</label>
                        <div class="col-sm-8">
                          <select name="tarifa_id" id="tarifa" class="form-control" v-model="tarifa" v-show="actorsShow2"
@@ -123,7 +119,7 @@
 
 
 
-       <div class="col-lg-12">
+       <div class="col-lg-12" style="margin-top:4em;">
           <label class="next" for="step_2">
             <span class="glyphicon glyphicon-arrow-right"aria-hidden="true"></span>
             Siguiente

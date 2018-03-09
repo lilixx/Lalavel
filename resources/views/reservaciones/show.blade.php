@@ -24,10 +24,10 @@
    @if($rh->cancelada == 0)
 
       <div class="col-lg-12">
-         <div class="col-lg-8 reserva">
+         <div class="col-lg-8">
             Fecha: {{$rh->fechaentrada}} / {{$rh->fechasalida}} <br/>
             Habitación: {{$rh->habitacione->numero}} ({{$rh->habitacione->habitaciontipo->nombre}}) <br/>
-            Precio: $ {{$rh->tarifa->valor}} ({{$rh->tarifa->nombre}})
+
           </div>
           <div class="col-lg-4">
               <a href="<?php echo  url('/');?>/reservahab/{{$rh->id}}/edit" class="btn btn-primary" title="Modificar">
@@ -45,6 +45,23 @@
               @endif
           </div>
 
+         <div class="col-lg-12">
+            <hr>
+         </div>
+
+          <div class="col-lg-8">
+            Precio: $ {{$rh->tarifa->valor}} ({{$rh->tarifa->nombre}}) <br/>
+            Observaciones: {{$rh->comentario}}
+         </div>
+
+         <div class="col-lg-4">
+             <a href="<?php echo  url('/');?>/reservahab/{{$rh->id}}/editcomentari" class="btn btn-primary" title="Modificar">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+          </div>
+
+          <div class="col-lg-12">
+             <hr>
+          </div>
 
           <table class="table table-striped">
             <thead>

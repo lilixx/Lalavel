@@ -39,9 +39,6 @@ Fecha: {{$now = \Carbon\Carbon::now()->format('Y-m-d')}}
 </div>
 
 
-
-
-@if($folio->credito == 1)
       <div class="col-lg-12">
       <table class="table table-striped">
           <thead>
@@ -80,7 +77,7 @@ Fecha: {{$now = \Carbon\Carbon::now()->format('Y-m-d')}}
 
       </table>
      </div>
-   @endif
+
 
    <input type="hidden" class="form-control" name="subtotal" value="{{$subtotal}}">
    <input type="hidden" class="form-control" name="iva" value="{{$iva}}">
@@ -123,6 +120,6 @@ Fecha: {{$now = \Carbon\Carbon::now()->format('Y-m-d')}}
 function doTheThing(){
   setTimeout(function(){
   location.reload();
-},4000);
+},6000);
 }
 </script>

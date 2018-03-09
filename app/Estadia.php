@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Estadia extends Model
 {
     protected $fillable = [
-        'reservacione_id', 'comentario',
+        'reservacione_id', 'comentario', 
     ];
 
     public function estadiahabitaciones()

@@ -12,6 +12,8 @@ use Teodolinda\HabitacionArea;
 
 use Teodolinda\EstadiaHabitacione;
 
+use Teodolinda\Bloqueo;
+
 use Teodolinda\ReservacionHabitacione;
 
 use DB;
@@ -66,13 +68,24 @@ class HabitacioneController extends Controller
     }
 
     /**
+     * Habitaciones sucias
+     */
+     public function dirty(Request $request)
+     {
+       $request->user()->authorizeRoles(['Admin']);
+       $habitacione = Habitacione::where('limpia', 0)->where('activo', 1)->get();
+       return view('habitaciones.dirty',compact('habitacione'));
+     }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function habmonth(Request $request)
     {
+      $request->user()->authorizeRoles(['Admin', 'Recepcionista']);
       $habtipo = HabitacionTipo::all();
       $habarea = HabitacionArea::all();
       $habitacion = Habitacione::all();
@@ -108,6 +121,12 @@ class HabitacioneController extends Controller
          $query->whereMonth('fechasalida', '=', $mes)
                ->orWhere('fechaentrada', '=', $mes);
        })->get();
+
+       $bloqueo = Bloqueo::where('activo', '=', 1)
+       ->where(function($query) use ($mes){
+          $query->whereMonth('fechainicio', '=', $mes)
+                ->orWhere('fechafin', '=', $mes);
+        })->get();
 
     // Cuenta las Reservaciones_id para saber si es una reserva en grupo
     $reservacount =  DB::table('reservacion_habitaciones')
@@ -159,14 +178,15 @@ class HabitacioneController extends Controller
                     'numero'=>$rs->reservacione->id,
                     'activo'=>$rs->reservacione->activo,
                     'numhab'=>$rs->habitacione->numero,
-                    'tipo'=>$rs->habitacione->habitaciontipo->nombre,
+                    'tipohab'=>$rs->habitacione->habitaciontipo->nombre,
                     'fechaentrada'=>$rs->fechaentrada,
                     'fechasalida'=>$rs->fechasalida,
                     'tarifa'=>$rs->tarifa->valor,
                     'nombretar'=>$rs->tarifa->nombre,
                     'noshow'=>$rs->reservacione->noshow,
                     'grupo'=>$rc->count_reserva,
-                    'estadia'=>0,
+                    'tipo'=>0,
+                    'walking'=>'noaplica',
                     'idreservahab'=>$rs->id,
                     //'reservadopor'=>$rs->reservacionentidadroles->entidade->nombres,
                   ];
@@ -190,13 +210,14 @@ class HabitacioneController extends Controller
                'numero'=>$es->estadia->id,
                'activo'=>'',
                'numhab'=>$es->habitacione->numero,
-               'tipo'=>$es->habitacione->habitaciontipo->nombre,
+               'tipohab'=>$es->habitacione->habitaciontipo->nombre,
                'fechaentrada'=>$es->fechaentrada,
                'fechasalida'=>$es->fechasalida,
-               'tarifa'=>$es->tarifa->nombre,
+               'tarifa'=>$es->tarifa->valor,
                'nombretar'=>$es->tarifa->nombre,
+               'walking'=>$es->estadia->reservacione_id,
                'noshow'=>'',
-               'estadia'=>'1',
+               'tipo'=>'1',
                'grupo'=>$ec->count_estadia,
                'idreservahab'=>'',
 
@@ -206,9 +227,36 @@ class HabitacioneController extends Controller
         }
       }
 
+      foreach($bloqueo as $bl){
+            $diaentrada = date("d", strtotime($bl->fechainicio)); //dd($dia);
+            $diasalida = date("d", strtotime($bl->fechafin)); //dd($dia);
+            $containers[] =  [
+              'mesentrada'=> date("m", strtotime($bl->fechainicio)),
+              'messalida' => date("m", strtotime($bl->fechafin)),
+              'diaentrada'=> date("d", strtotime($bl->fechainicio)),
+              'diasalida' => date("d", strtotime($bl->fechafin)),
+              'numero'=>$bl->id,
+              'activo'=>'',
+              'numhab'=>$bl->habitacione->numero,
+              'tipohab'=>$bl->habitacione->habitaciontipo->nombre,
+              'fechaentrada'=>$bl->fechainicio,
+              'fechasalida'=>$bl->fechafin,
+              'tarifa'=>'-',
+              'nombretar'=>'Rack',
+              'walking'=>'no',
+              'noshow'=>'',
+              'tipo'=>'2',
+              'grupo'=>'',
+              'idreservahab'=>'',
+              'idrazonbloqueo'=>$bl->razonbloqueo->id,
+              'bloqueadopor'=>$bl->razonbloqueo->nombre,
 
+              //'reservadopor'=>$rs->reservacionentidadroles->entidade->nombres,
+            ];
 
-      //dd($containers);
+     }
+
+    //dd($containers);
 
       $n = 1;
       $j=1;
@@ -243,14 +291,16 @@ class HabitacioneController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   //dd($request->limpia);
         $request->user()->authorizeRoles(['Admin']);
         $habitacion = Habitacione::find($id);
 
-        if($habitacion->update($request->all())){
-           return redirect('habitaciones')->with('msj', 'Datos guardados');
-        } else {
-           return back()->with('errormsj', 'Los datos no se guardaron');
+        $habitacion->update($request->all());
+
+        if($request->limpia == 1){
+          return back()->with('msj', 'Datos guardados');
+        } else{
+          return redirect('habitaciones')->with('msj', 'Datos guardados');
         }
     }
 
@@ -265,7 +315,7 @@ class HabitacioneController extends Controller
         //
     }
 
-    public function habmonth()
+    public function show($id)
     {
       //  dd($request);
       //  $request->user()->authorizeRoles(['Admin', 'Recepcionista']);

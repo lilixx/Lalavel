@@ -35,8 +35,6 @@
       <a href="/estadias/{{$h->id}}/createadicional" class="btn btn-success" title="Agregar Habitacion">
       <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
 
-      <a href="#" class="btn btn-danger" title="Dar de baja">
-      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 
     </td>
   </tr>

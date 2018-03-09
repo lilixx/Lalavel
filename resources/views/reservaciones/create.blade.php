@@ -276,7 +276,7 @@
 
              <div class="col-lg-8">
                 <div class="form-group">
-                  <label for="titulo" class="col-sm-4 control-label">Comentarios</label>
+                  <label for="titulo" class="col-sm-4 control-label">Observaciones</label>
                   <div class="col-sm-8">
                     <textarea class="form-control" rows="3" name="comentario"  placeholder="Comentarios"></textarea>
                   </div>

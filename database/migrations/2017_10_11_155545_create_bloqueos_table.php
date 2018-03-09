@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEstadiaHabitacionesTable extends Migration
+class CreateBloqueosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateEstadiaHabitacionesTable extends Migration
      */
     public function up()
     {
-        Schema::create('estadia_habitaciones', function (Blueprint $table) {
+        Schema::create('bloqueos', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('habitacione_id')->unsigned();
+            $table->integer('razonbloqueo_id')->nullable()->unsigned();
+            $table->foreign('razonbloqueo_id')->references('id')->on('razonbloqueos');
+            $table->integer('habitacione_id')->nullable()->unsigned();
             $table->foreign('habitacione_id')->references('id')->on('habitaciones');
-            $table->integer('estadia_id')->unsigned();
-            $table->foreign('estadia_id')->references('id')->on('estadias');
-            $table->integer('tarifa_id')->unsigned();
-            $table->foreign('tarifa_id')->references('id')->on('tarifas');
-            $table->date('fechaentrada');
-            $table->date('fechasalida');
+            $table->date('fechainicio');
+            $table->date('fechafin');
             $table->longText('comentario')->nullable();
             $table->boolean('activo')->default(1);
             $table->timestamps();
@@ -36,6 +34,6 @@ class CreateEstadiaHabitacionesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estadia_habitaciones');
+        Schema::dropIfExists('bloqueos');
     }
 }
